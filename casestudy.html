@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตัวอย่างกรณีศึกษา: การแก้ปัญหาความปลอดภัยทางถนนในชุมชน</title>
+  
+  <!-- Google Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0F7FF',
+              100: '#E0EFFF',
+              500: '#0284C7',
+              600: '#0369A1',
+              700: '#075985',
+              900: '#0C4A6E',
+            },
+            danger: {
+              50: '#FEF2F2',
+              100: '#FEE2E2',
+              500: '#EF4444',
+              600: '#DC2626',
+            },
+            success: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              600: '#059669',
+              700: '#047857',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- TOP APP BAR / BRANDING -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <span class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">CS</span>
+        <span class="font-semibold text-slate-900 tracking-tight text-sm sm:text-base">คลังกรณีศึกษาเพื่อการเรียนรู้</span>
+      </div>
+      <div class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">
+        System Design & Safety
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full">
+
+    <!-- HERO SECTION -->
+    <section class="text-center mb-10">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs sm:text-sm font-medium mb-3">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        ตัวอย่างกรณีศึกษาเชิงระบบ
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-bold text-slate-900 leading-tight mb-3">
+        วิกฤตความเร็วถนนผ่าชุมชนและหน้าโรงเรียน
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+        ถอดรหัสข้อผิดพลาดเชิงโครงสร้าง พฤติกรรมศาสตร์ และแนวทางแก้ปัญหาด้วยวิธีคิดแบบสะกิดพฤติกรรม (Nudge Theory)
+      </p>
+    </section>
+
+    <!-- CASE STUDY IMAGE (16:9 Aspect Ratio) -->
+    <div class="mb-10 group">
+      <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-slate-200">
+        <img 
+          src="https://pppyacademy.github.io/pppycamp/CaseEx.png" 
+          alt="ภาพจำลองสภาพแวดล้อมถนนหน้าโรงเรียนและชุมชน" 
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent p-4 sm:p-5 text-white">
+          <p class="text-xs sm:text-sm font-light text-slate-200">
+            ภาพบริบท: สภาพถนนทางตรงยาว 2 กิโลเมตร ตัดผ่านชุมชนและหน้าโรงเรียนประถม
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTEXT & SITUATION CARD -->
+    <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900">บริบทและสถานการณ์ปัจจุบัน</h2>
+      </div>
+
+      <div class="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
+        <p>
+          ถนนที่ตัดผ่านใจกลางหมู่บ้านและผ่านหน้าโรงเรียนประถม มีลักษณะเป็นทางตรงยาวราบเรียบ ระยะทางกว่า 2 กิโลเมตร ป้ายจำกัดความเร็ว 30 กม./ชม. มีเพียงป้ายเดียวและถูกกิ่งไม้บดบัง รถยนต์ รถกระบะส่งของ และมอเตอร์ไซค์บิ๊กไบค์ มักใช้เส้นทางนี้ทำความเร็วทะลุ <strong class="text-danger-600 font-semibold">80–90 กม./ชม.</strong> เนื่องจากไม่มีกล้องตรวจจับหรืออุปกรณ์ชะลอความเร็ว
+        </p>
+        <p class="bg-slate-50 p-4 rounded-xl border-l-4 border-amber-500 text-slate-700">
+          ชาวบ้าน ผู้สูงอายุ และเด็ก ๆ ที่ต้องเดินข้ามถนนไปซื้อของที่ร้านค้าโชห่วยฝั่งตรงข้าม <strong>ต้องใช้เวลาคอยยืนชะเง้อนานหลายนาที</strong> และเกิดอุบัติเหตุเฉี่ยวชนคนข้ามถนนหรือสัตว์เลี้ยงเป็นประจำ เพราะความเร็วของรถทำให้ผู้ขับขี่ไม่สามารถหยุดรถได้ทันเมื่อมีคนก้าวข้ามถนน
+        </p>
+      </div>
+
+      <!-- HAZARDOUS ATTITUDES -->
+      <div class="mt-6 pt-6 border-t border-slate-100">
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-danger-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          ทัศนคติอันตรายที่ตรวจพบในระบบ (Dangerous Mindsets)
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3.5 rounded-xl bg-danger-50 border border-danger-100 text-danger-900">
+            <span class="font-bold block text-sm mb-1 text-danger-600">1. ชะล่าใจ</span>
+            <p class="text-xs sm:text-sm text-slate-600">
+              ชะล่าใจว่าถนนโล่ง ไม่มีสิ่งกีดขวาง คงไม่มีอะไรเกิดขึ้น จนละเลยข้อเท็จจริงเชิงพื้นที่ว่ากำลังแล่นอยู่ <em>"ใจกลางชุมชนและหน้าโรงเรียน"</em>
+            </p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-danger-50 border border-danger-100 text-danger-900">
+            <span class="font-bold block text-sm mb-1 text-danger-600">2. ฝ่าฝืนกฎ</span>
+            <p class="text-xs sm:text-sm text-slate-600">
+              ใช้ความเร็ว 80–90 กม./ชม. (เกินกว่า 30 กม./ชม. ที่กฎหมายกำหนดเกือบ 3 เท่า) และเลือกปฏิบัติตามกฎหมายเฉพาะเมื่อมีกล้องตรวจจับหรือเจ้าหน้าที่บังคับใช้เท่านั้น
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION TITLE: THE 6 STEPS -->
+    <div class="flex items-center gap-3 mb-6">
+      <div class="h-6 w-1.5 bg-brand-600 rounded-full"></div>
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900">กระบวนการวิเคราะห์และแนวทางพัฒนา (6 คำถาม)</h2>
+    </div>
+
+    <!-- 6 CARDS GRID -->
+    <div class="space-y-4">
+
+      <!-- STEP 1 -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 transition-all hover:border-slate-300">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm">
+            01
+          </div>
+          <div class="flex-grow">
+            <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider block mb-1">สภาพดั้งเดิม</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2">ของเดิมคืออะไร ?</h3>
+            <ul class="list-disc list-outside pl-4 space-y-1.5 text-sm text-slate-600">
+              <li><strong>ถนนกายภาพ:</strong> ถนน 2 ช่องจราจร ทางตรงยาว 2 กิโลเมตร ผิวเรียบ ผ่ากลางชุมชนและโรงเรียน</li>
+              <li><strong>ระบบควบคุม:</strong> ป้ายจำกัดความเร็ว 30 กม./ชม. เพียง 1 ป้าย และถูกกิ่งไม้บดบัง</li>
+              <li><strong>จุดบกพร่อง:</strong> ไร้กล้องตรวจจับ (CCTV/Speed Radar) และไร้อุปกรณ์ชะลอความเร็ว (Traffic Calming)</li>
+              <li><strong>พฤติกรรมในระบบ:</strong> ยานพาหนะใช้ความเร็ว 80–90 กม./ชม. คนข้ามถนนต้อง "ยืนรอชะเง้อ" โดยไม่มีทางม้าลายที่ปลอดภัย</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 transition-all hover:border-slate-300">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm">
+            02
+          </div>
+          <div class="flex-grow">
+            <span class="text-xs font-semibold text-danger-600 uppercase tracking-wider block mb-1">การวินิจฉัยปัญหา</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2">ของเดิมมีข้อด้อยอะไรบ้าง ?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-800 block mb-1">❌ ผังถนนเอื้อความเร็ว</span>
+                <p class="text-xs text-slate-500">ทางตรง เรียบ กว้าง เสมือนทางหลวงนอกเมือง หลอกให้คนขับรู้สึกปลอดภัยที่จะขับเร็ว</p>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-800 block mb-1">❌ สัญญาณเตือนล่องหน</span>
+                <p class="text-xs text-slate-500">ป้ายเตือนมีน้อยและถูกกิ่งไม้บดบัง ขาดการบำรุงรักษา</p>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <span class="font-medium text-slate-800 block mb-1">❌ ไร้สิ่งบังคับกายภาพ</span>
+                <p class="text-xs text-slate-500">ไม่มีลูกระนาด แถบชะลอความเร็ว หรือเนินบังคับความเร็ว</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 transition-all hover:border-slate-300">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm">
+            03
+          </div>
+          <div class="flex-grow">
+            <span class="text-xs font-semibold text-amber-600 uppercase tracking-wider block mb-1">เป้าหมายและเหตุผล</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2">ข้อด้อยที่อยากแก้ และเหตุผล ?</h3>
+            <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-4 text-sm text-slate-700 space-y-2">
+              <div class="flex items-center gap-2 font-semibold text-amber-900">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                เป้าหมายที่ต้องการแก้:
+              </div>
+              <p class="text-slate-800 pl-4">
+                ลดความเร็วของยานพาหนะ ณ จุดตัดชุมชน จากเดิม <strong>80–90 กม./ชม.</strong> ให้เหลือ <strong>≤ 30–40 กม./ชม.</strong>
+              </p>
+              <div class="flex items-center gap-2 font-semibold text-amber-900 pt-1">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                เหตุผลเบื้องหลัง (Why):
+              </div>
+              <p class="text-slate-800 pl-4">
+                ความเร็วของยานพาหนะที่ลดลงส่งผลโดยตรงต่อ <strong>อัตราการรอดชีวิต</strong> และ <strong>ความปลอดภัยของคนเดินเท้า</strong> (ระยะเบรกสั้นลง เพิ่มโอกาสหยุดรถได้ทัน)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-brand-200 ring-2 ring-brand-500/10 transition-all">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+            04
+          </div>
+          <div class="flex-grow">
+            <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider block mb-1">การลงมือปฏิบัติ</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2">จะแก้ข้อด้อยนั้นอย่างไร ?</h3>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3 bg-brand-50/50 p-3.5 rounded-xl border border-brand-100">
+                <span class="text-lg">🛣️</span>
+                <div class="text-sm text-slate-700">
+                  <strong class="text-brand-900 block font-semibold mb-0.5">ทาสีแถบลดความเร็วเชิงทัศนียภาพ (Optical Speed Bars):</strong>
+                  บนพื้นถนนโดยเริ่มจากระยะห่างแล้วค่อยๆ ถี่ขึ้นเรื่อยๆ เมื่อเข้าใกล้โรงเรียน เพื่อหลอกสมองผู้ขับขี่ว่า <em>"รถกำลังแล่นเร็วขึ้นเรื่อยๆ"</em> ส่งผลให้สัญชาตญาณเท้าแตะเบรกโดยไม่รู้ตัว
+                </div>
+              </div>
+              <div class="flex items-start gap-3 bg-brand-50/50 p-3.5 rounded-xl border border-brand-100">
+                <span class="text-lg">🎨</span>
+                <div class="text-sm text-slate-700">
+                  <strong class="text-brand-900 block font-semibold mb-0.5">ปรับปรุงภูมิทัศน์ชุมชน (Community Placemaking):</strong>
+                  ตัดแต่งกิ่งไม้ที่บังป้ายเดิม และระดมนักเรียนกับชาวบ้านมาร่วมกันเพ้นท์ภาพฝาผนัง/รั้วโรงเรียนด้วยสีสันสดใส เพื่อเปลี่ยนบรรยากาศจากถนนเรียบโล่ง ให้กลายเป็น <em>"พื้นที่ส่วนรวมของชุมชน"</em> ซึ่งทำให้ผู้ขับขี่ตระหนักและระมัดระวังมากขึ้น
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 transition-all hover:border-slate-300">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm">
+            05
+          </div>
+          <div class="flex-grow">
+            <span class="text-xs font-semibold text-purple-600 uppercase tracking-wider block mb-1">ฐานคิดและทฤษฎี</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2">หลักการ/ความรู้ ที่ใช้คืออะไร ?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div class="border border-purple-100 bg-purple-50/40 p-3.5 rounded-xl">
+                <div class="font-bold text-purple-900 flex items-center gap-1.5 mb-1">
+                  <span>💡</span> ทฤษฎีสะกิดพฤติกรรม (Nudge Theory)
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  การออกแบบสิ่งแวดล้อมเพื่อโน้มน้าวพฤติกรรมมนุษย์ให้ตัดสินใจอย่างปลอดภัย โดยไม่ต้องออกคำสั่ง บังคับ หรือใช้โทษปรับทางกฎหมายเพียงอย่างเดียว
+                </p>
+              </div>
+              <div class="border border-purple-100 bg-purple-50/40 p-3.5 rounded-xl">
+                <div class="font-bold text-purple-900 flex items-center gap-1.5 mb-1">
+                  <span>👁️</span> ปรากฏการณ์ภาพลวงตาทางสายตา
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  การใช้ความถี่ของเส้นบนผิวจราจร (Visual Frequency) กระตุ้นการรับรู้ความเร็วในสมอง ให้สัญชาตญาณสั่งการลดความเร็วของกล้ามเนื้อเท้า
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-success-200 ring-2 ring-success-600/10 transition-all">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full bg-success-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+            06
+          </div>
+          <div class="flex-grow">
+            <span class="text-xs font-semibold text-success-700 uppercase tracking-wider block mb-1">การวัดผลและประเมิน</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-2">รู้ได้อย่างไรว่าจะดีกว่าเดิม (วัด/พิสูจน์อย่างไร) ?</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div class="bg-success-50/60 p-4 rounded-xl border border-success-100 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-success-100 text-success-700 flex items-center justify-center font-bold text-base flex-shrink-0">
+                  %
+                </div>
+                <div>
+                  <span class="text-xs text-slate-500 block">ตัวชี้วัดพฤติกรรมการขับขี่</span>
+                  <span class="text-sm font-semibold text-slate-900">อัตราการแตะเบรกล่วงหน้า</span>
+                  <p class="text-xs text-success-700 font-medium">เพิ่มขึ้นเป็น xx% ของยวดยานทั้งหมดก่อนถึงทางแยก/โรงเรียน</p>
+                </div>
+              </div>
+              <div class="bg-success-50/60 p-4 rounded-xl border border-success-100 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-success-100 text-success-700 flex items-center justify-center font-bold text-base flex-shrink-0">
+                  km
+                </div>
+                <div>
+                  <span class="text-xs text-slate-500 block">ตัวชี้วัดความปลอดภัยรวม</span>
+                  <span class="text-sm font-semibold text-slate-900">ความเร็วเฉลี่ยบนเส้นทาง</span>
+                  <p class="text-xs text-success-700 font-medium">ลดลงอย่างน้อย xx% โดยใช้งบประมาณปรับปรุงต่ำ</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUMMARY BANNER -->
+    <div class="mt-8 bg-slate-900 rounded-2xl p-6 text-white text-center sm:text-left sm:flex items-center justify-between gap-4">
+      <div>
+        <h4 class="font-bold text-base mb-1">หัวใจสำคัญของการเรียนรู้กรณีศึกษานี้</h4>
+        <p class="text-slate-400 text-xs sm:text-sm">"ปัญหาความเร็วไม่ได้แก้ได้ด้วยป้ายห้ามเพียงอย่างเดียว แต่แก้ได้ด้วยการออกแบบสภาพแวดล้อมที่สื่อสารกับพฤติกรรมมนุษย์"</p>
+      </div>
+      <a href="#top" class="mt-4 sm:mt-0 inline-flex items-center justify-center px-4 py-2 rounded-xl bg-white text-slate-900 text-xs font-semibold hover:bg-slate-100 transition-colors whitespace-nowrap">
+        กลับสู่ด้านบน ↑
+      </a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
+    <p>สื่อการเรียนรู้กรณีศึกษาเพื่อการศึกษาและพัฒนาการคิดเชิงระบบ (Systems Thinking)</p>
+  </footer>
+
+</body>
+</html>
