@@ -13,10 +13,16 @@
     <iframe id="gasFrame" allow="clipboard-write; camera; microphone; forms;"></iframe>
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbw5jmVKMEUHMhp6GrYjluHQIie1S4L3x7ahdJJiwutA6LbqQ3aPGz_GvGEBHpvWOWuEdA/exec";
-        // ดึง ?reportId=... ที่ส่งมากับ GitHub แล้วส่งต่อไปยัง GAS page=report
-        const params = window.location.search;
-        const joiner = params.startsWith("?") ? "&" : "?";
-        document.getElementById("gasFrame").src = GAS_URL + "?page=report" + joiner + params.replace("?", "");
+        
+        // ดึง reportId จาก URL ปัจจุบัน
+        const urlParams = new URLSearchParams(window.location.search);
+        let repId = urlParams.get("reportId") || urlParams.get("report") || "";
+        
+        // ล้างเครื่องหมายคำพูดส่วนเกินออก (ถ้ามี)
+        repId = repId.replace(/['"\s]/g, '').trim();
+
+        // ส่งต่อ parameter ไปยัง Google Apps Script
+        document.getElementById("gasFrame").src = GAS_URL + "?page=report&reportId=" + encodeURIComponent(repId);
     </script>
 </body>
 </html>
