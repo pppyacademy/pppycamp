@@ -28,10 +28,21 @@
     </style>
 </head>
 <body>
-    <!-- เพิ่ม allow attribute เพื่อให้สคริปต์เข้าถึงฟีเจอร์ต่างๆ ได้ถ้าจำเป็น -->
+    <!-- ถอด src ออกจาก iframe แล้วใช้ JavaScript กำหนดแทน เพื่อไม่ให้โหลดเบิ้ล 2 รอบ -->
     <iframe 
-        src="https://script.google.com/macros/s/AKfycbx57binzcNArAuAG0OTsz9HVvoqLhJb1kFbJy0u9sE-ENcdc_pTQViZhbDJVDnpbd26/exec"
+        id="appFrame"
         allow="camera; microphone; forms; geolocation; autoplay"
     ></iframe>
+
+    <script>
+        // URL หลักของ Google Apps Script
+        const BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx57binzcNArAuAG0OTsz9HVvoqLhJb1kFbJy0u9sE-ENcdc_pTQViZhbDJVDnpbd26/exec";
+        
+        // ดึง parameter ทั้งหมดที่ส่งมายัง GitHub (เช่น ?to=finance หรือ ?to=hr)
+        const currentParams = window.location.search;
+        
+        // ส่งต่อ parameter ไปยัง iframe ของ Apps Script ทันที
+        document.getElementById("appFrame").src = BASE_SCRIPT_URL + currentParams;
+    </script>
 </body>
 </html>
