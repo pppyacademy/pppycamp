@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>แบบประเมินบริษัทจัดการเรียนรู้</title>
+    <title>ระบบประเมินบริษัทจัดการเรียนรู้</title>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         iframe { display: block; width: 100%; height: 100vh; height: 100dvh; border: none; }
@@ -11,9 +11,20 @@
 </head>
 <body>
     <iframe id="gasFrame" allow="clipboard-write; camera; microphone; forms;"></iframe>
+
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxWTL5XlSjfCbh6iIfR8vuv0V2Mcel8Ezt742uWjR9RRErWiOM5o3SKi1dFbInQ20i8/exec";
-        document.getElementById("gasFrame").src = GAS_URL + "?page=eval";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyb13GdnnWJ9C3rIQTPY3EhPsiY01Sx0_UqGcjwFCHDLCFMQjmEXRwg2JFxpqrHfcRA/exec";
+        
+        // 1. ดึง Query Parameters ทั้งหมดจาก URL ด้านนอกของ GitHub
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // 2. ถ้าผู้ใช้ไม่ได้พิมพ์ ?page=... ต่อท้าย ให้ตั้งค่าเริ่มต้นเป็นหน้าแบบประเมิน (eval)
+        if (!urlParams.has("page")) {
+            urlParams.set("page", "eval");
+        }
+        
+        // 3. นำ parameters ทั้งหมดส่งต่อเข้าไปใน iframe
+        document.getElementById("gasFrame").src = GAS_URL + "?" + urlParams.toString();
     </script>
 </body>
 </html>
