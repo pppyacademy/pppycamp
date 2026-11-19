@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard สรุปจำนวนผู้สมัคร Young รักษ์น่าน 2570</title>
+  <!-- Google Fonts: Noto Sans Thai -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js & Datalabels Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Thai"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans Thai', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 antialiased text-slate-800">
+
+  <!-- Header Section -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+              🌱 โครงการเพาะพันธุ์ปัญญา
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              สถานะ: สรุปข้อมูลล่าสุด
+            </span>
+          </div>
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+            Dashboard สรุปจำนวนผู้สมัคร Young รักษ์น่าน 2570
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            updated ข้อมูลถึงวันที่ <strong class="text-slate-700 font-semibold" id="header-updated-date">19-11-2026</strong> เวลา <strong class="text-slate-700 font-semibold" id="header-updated-time">14:59:54</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+
+    <!-- Summary KPI Cards -->
+    <section>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        
+        <!-- Total Applicants Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow transition flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-emerald-50 rounded-full opacity-60 pointer-events-none"></div>
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-slate-500">จำนวนผู้สมัครทั้งหมด</span>
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
+                👥
+              </div>
+            </div>
+            <div class="flex items-baseline gap-2 mt-1">
+              <span class="text-4xl sm:text-5xl font-extrabold text-emerald-600 tracking-tight" id="kpi-total">45</span>
+              <span class="text-slate-500 font-medium text-base">คน</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>นับจำนวน records ล่าสุด</span>
+            <span class="font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">จำนวนเต็ม</span>
+          </div>
+        </div>
+
+        <!-- Channels Breakdown Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-medium text-slate-500">รู้ช่องทางการสมัครจาก</span>
+              <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg">
+                📢
+              </div>
+            </div>
+            <div id="kpi-channels" class="space-y-2">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>จำแนกตามช่องทาง</span>
+            <span class="font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded">จำนวนเต็ม</span>
+          </div>
+        </div>
+
+        <!-- Dates Breakdown Card -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-medium text-slate-500">วันที่สมัคร</span>
+              <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-lg">
+                📅
+              </div>
+            </div>
+            <div id="kpi-dates" class="space-y-2">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>จำแนกตามวันรับสมัคร</span>
+            <span class="font-medium text-purple-700 bg-purple-50 px-2 py-0.5 rounded">จำนวนเต็ม</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900">กราฟแสดงความถี่สะสม</h2>
+          <p class="text-xs sm:text-sm text-slate-500">กราฟแท่งแสดงข้อมูลความถี่สะสมพร้อมตัวเลขจำนวนเต็มกำกับชัดเจนทุกแท่ง</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Chart 1: โรงเรียน -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>🏫</span> โรงเรียน (ความถี่สะสม)
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700" id="badge-schools-count">-- โรงเรียน</span>
+          </div>
+          <div class="chart-container flex-1 min-h-[380px]">
+            <canvas id="chart-schools"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: สังกัดของโรงเรียน -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>🏛️</span> สังกัดของโรงเรียน (ความถี่สะสม)
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700" id="badge-affiliations-count">-- สังกัด</span>
+          </div>
+          <div class="chart-container flex-1 min-h-[380px]">
+            <canvas id="chart-affiliations"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: ระดับชั้น -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>🎓</span> ระดับชั้น (ความถี่สะสม)
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700">จำแนกตามชั้นเรียน</span>
+          </div>
+          <div class="chart-container flex-1 min-h-[320px]">
+            <canvas id="chart-grades"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: อำเภอที่อาศัย -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>📍</span> อำเภอที่อาศัย (ความถี่สะสม)
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700" id="badge-districts-count">-- อำเภอ</span>
+          </div>
+          <div class="chart-container flex-1 min-h-[320px]">
+            <canvas id="chart-districts"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 5: ตำบลที่อาศัย -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>🏡</span> ตำบลที่อาศัย (ความถี่สะสม)
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700" id="badge-subdistricts-count">-- ตำบล</span>
+          </div>
+          <div class="chart-container min-h-[500px]">
+            <canvas id="chart-subdistricts"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 6: อุปกรณ์ที่ใช้สมัคร -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>📱</span> อุปกรณ์ที่ใช้สมัคร (ความถี่สะสม)
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">อุปกรณ์ระบบ</span>
+          </div>
+          <div class="chart-container min-h-[220px]">
+            <canvas id="chart-devices"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Applicant Voices Section -->
+    <section class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-sm space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span>💬</span> ข้อความจากผู้สมัคร
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            คลิกเลือกหัวข้อเพื่อดูข้อความ แรงบันดาลใจ และสิ่งที่ได้เรียนรู้จากน้องๆ แต่ละคน
+          </p>
+        </div>
+        <!-- Search filter -->
+        <div class="relative w-full sm:w-72">
+          <input 
+            type="text" 
+            id="quote-search" 
+            placeholder="ค้นหาชื่อ, โรงเรียน, หรือข้อความ..." 
+            class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+          >
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+      </div>
+
+      <!-- 3 Main Buttons -->
+      <div class="flex flex-wrap gap-2 sm:gap-3">
+        <button 
+          id="btn-part-why" 
+          onclick="switchPart('why')" 
+          class="part-btn active flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-2 bg-emerald-600 text-white shadow-sm"
+        >
+          <span>🎯</span> 1. ทำไมถึงอยากสมัคร Young รักษ์น่าน
+        </button>
+        <button 
+          id="btn-part-growth" 
+          onclick="switchPart('growth')" 
+          class="part-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200"
+        >
+          <span>🌱</span> 2. สิ่งที่พัฒนาขึ้นหลังผ่านเพาะพันธุ์ปัญญา
+        </button>
+        <button 
+          id="btn-part-memory" 
+          onclick="switchPart('memory')" 
+          class="part-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200"
+        >
+          <span>✨</span> 3. ความทรงจำดี ๆ กับเพาะพันธุ์ปัญญา
+        </button>
+      </div>
+
+      <!-- Section Indicator Banner -->
+      <div class="bg-emerald-50/70 border border-emerald-100 rounded-xl px-4 py-3 flex items-center justify-between text-xs sm:text-sm text-emerald-900 font-medium">
+        <span id="current-question-title">กำลังแสดง: 1. ทำไมถึงอยากสมัคร Young รักษ์น่าน</span>
+        <span id="current-quotes-count" class="text-xs bg-emerald-200/80 text-emerald-800 px-2.5 py-0.5 rounded-full font-semibold">45 ข้อความ</span>
+      </div>
+
+      <!-- Quotes Cards Container -->
+      <div id="quotes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div id="quotes-empty" class="hidden py-12 text-center text-slate-400 text-sm">
+        ไม่พบข้อความที่ตรงกับการค้นหา
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white mt-12 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="font-medium text-slate-700">Young รักษ์น่าน 2570 • มูลนิธิเพาะพันธุ์ปัญญา</p>
+      <p class="mt-1 text-slate-400">ระบบ Dashboard สรุปผลสถิติแบบปลอดภัยตามหลัก PDPA โดยไม่เผยแพร่ข้อมูลระบุตัวตนส่วนบุคคล (PII) และ Google Sheet URL สู่สาธารณะ</p>
+    </div>
+  </footer>
+
+  <!-- Script & Embedded Sanitized Data -->
+  <script>
+    // ข้อมูลที่ผ่านการสรุปและคัดกรองความปลอดภัย (Sanitized Data) เรียบร้อยแล้ว
+    // สามารถเปิดดูไฟล์เต็มหรือรัน update_data.py เพื่อดึงอัปเดตใหม่ได้ตลอดเวลา
+  </script>
+</body>
+</html>
