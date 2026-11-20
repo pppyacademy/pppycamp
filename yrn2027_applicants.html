@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตรวจสอบรายชื่อผู้สมัคร Young รักษ์น่าน 2570 (Admin)</title>
+  <!-- Google Fonts: Noto Sans Thai -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Thai"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans Thai', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    /* Sticky Table Header & Scrollbar */
+    .table-wrap {
+      max-height: calc(100vh - 260px);
+      min-height: 360px;
+    }
+    .table-wrap thead th {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .table-wrap thead tr.search-row th {
+      position: sticky;
+      top: 41px;
+      z-index: 19;
+    }
+    /* Excel Filter Popover */
+    #excel-filter-popover {
+      position: fixed;
+      z-index: 70;
+      width: min(290px, calc(100vw - 24px));
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 antialiased text-slate-800">
+
+  <!-- ==================== ADMIN LOGIN SCREEN ==================== -->
+  <section id="login-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-emerald-50 via-slate-50 to-teal-50">
+    <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-700 text-2xl shadow-sm">
+          🔐
+        </div>
+        <div>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-1.5">
+            🌱 เพาะพันธุ์ปัญญา • Admin
+          </span>
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">
+            ตรวจสอบรายชื่อผู้สมัคร
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Young รักษ์น่าน 2570 — กรุณากรอกรหัสผ่านผู้ดูแลระบบ
+          </p>
+        </div>
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label for="admin-password" class="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+            Admin Password
+          </label>
+          <div class="relative">
+            <input
+              type="password"
+              id="admin-password"
+              autocomplete="current-password"
+              required
+              placeholder="กรอกรหัสผ่านผู้ดูแลระบบ..."
+              class="w-full pl-4 pr-11 py-3 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white transition"
+            >
+            <button
+              type="button"
+              onclick="togglePasswordVisibility()"
+              aria-label="แสดง/ซ่อนรหัสผ่าน"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+            >
+              <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="login-error" class="hidden rounded-xl bg-rose-50 border border-rose-200 px-3.5 py-2.5 text-xs sm:text-sm text-rose-700 font-medium">
+          รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
+        </div>
+
+        <button
+          type="submit"
+          id="btn-login"
+          class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-60 text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2"
+        >
+          <svg id="login-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span id="login-btn-text">เข้าสู่ระบบตรวจสอบรายชื่อ</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN ADMIN APP ==================== -->
+  <div id="app-screen" class="hidden min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+      <div class="max-w-[1600px] mx-auto px-3 sm:px-6 py-3 sm:py-3.5">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
+          <!-- Left: Title & Updated -->
+          <div class="space-y-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+                🌱 เพาะพันธุ์ปัญญา • Admin
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600">
+                <span id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="status-text">เชื่อมต่อข้อมูลสดแล้ว</span>
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3 flex-nowrap overflow-hidden">
+              <h1 class="font-bold text-slate-900 tracking-tight whitespace-nowrap truncate" style="font-size: clamp(0.9rem, 3.3vw, 1.4rem);">
+                รายชื่อผู้สมัคร Young รักษ์น่าน 2570
+              </h1>
+              <span class="inline-flex items-baseline gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm ring-2 ring-emerald-200/80 whitespace-nowrap shrink-0">
+                <span id="header-filtered-count" class="text-base sm:text-xl font-extrabold leading-none">--</span>
+                <span class="text-[11px] sm:text-xs font-semibold text-emerald-50" id="header-total-suffix">/ -- คน</span>
+              </span>
+            </div>
+
+            <div class="flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-500">
+              <button
+                id="btn-refresh"
+                onclick="fetchApplicants()"
+                title="รีเฟรชข้อมูลล่าสุด"
+                aria-label="รีเฟรชข้อมูลล่าสุด"
+                class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-slate-100 hover:bg-emerald-100 hover:text-emerald-700 active:scale-95 disabled:opacity-50 text-slate-600 border border-slate-200 transition shrink-0"
+              >
+                <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </button>
+              <span>Updated: <strong id="header-updated-date" class="text-slate-700 font-semibold">--</strong> เวลา <strong id="header-updated-time" class="text-slate-700 font-semibold">--</strong></span>
+            </div>
+          </div>
+
+          <!-- Right: Global Search + Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="relative flex-1 sm:flex-initial sm:w-64">
+              <input
+                type="text"
+                id="global-search"
+                placeholder="ค้นหาด่วนทุกคอลัมน์..."
+                oninput="handleGlobalSearch(this.value)"
+                class="w-full pl-8 pr-7 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+              >
+              <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <button
+                id="btn-clear-global"
+                type="button"
+                onclick="clearGlobalSearch()"
+                class="hidden absolute right-2 top-1.5 text-slate-400 hover:text-slate-600 text-xs px-1"
+              >✕</button>
+            </div>
+
+            <button
+              type="button"
+              id="btn-reset-all"
+              onclick="resetAllFilters()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition disabled:opacity-40"
+              disabled
+            >
+              <span>ล้างตัวกรอง</span>
+              <span id="active-filter-badge" class="hidden px-1.5 py-0.2 rounded-full bg-amber-600 text-white text-[10px]">0</span>
+            </button>
+
+            <button
+              type="button"
+              onclick="exportFilteredCSV()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 transition"
+              title="ดาวน์โหลดเฉพาะรายการที่แสดงเป็นไฟล์ CSV สำหรับเปิดใน Excel"
+            >
+              <span>📥</span>
+              <span class="hidden sm:inline">Export Excel</span>
+              <span class="sm:hidden">CSV</span>
+            </button>
+
+            <button
+              type="button"
+              onclick="handleLogout()"
+              class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 text-slate-600 border border-slate-200 transition"
+            >
+              <span>ออกจากระบบ</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Table Content -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 py-4 sm:py-5 space-y-3">
+
+      <!-- Active Filter Chips Bar -->
+      <div id="active-chips-bar" class="hidden flex items-center gap-2 flex-wrap bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs">
+        <span class="font-semibold text-slate-500">ตัวกรองที่ใช้งาน:</span>
+        <div id="active-chips-list" class="flex items-center gap-1.5 flex-wrap"></div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+        <div class="table-wrap overflow-auto relative">
+          <table class="w-full text-left border-collapse text-xs sm:text-[13px]">
+            <thead id="table-head">
+              <!-- Rendered dynamically -->
+            </thead>
+            <tbody id="table-body" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="10" class="py-16 text-center text-slate-400 text-sm">
+                  กำลังโหลดรายชื่อผู้สมัคร...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="bg-slate-50 border-t border-slate-200 px-4 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-slate-500">
+          <div id="table-summary-text">แสดง 0 จากทั้งหมด 0 รายการ</div>
+          <div class="text-[11px] text-slate-400">
+            คลิกชื่อคอลัมน์เพื่อ Sort • กดไอคอนกรวยเพื่อ Filter แบบ Excel • พิมพ์ในช่องใต้หัวคอลัมน์เพื่อค้นหาแยกคอลัมน์
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
+      Young รักษ์น่าน 2570 • มูลนิธิเพาะพันธุ์ปัญญา
+    </footer>
+
+  </div>
+
+  <!-- ==================== EXCEL-STYLE FILTER POPOVER ==================== -->
+  <div id="excel-filter-popover" class="hidden bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 space-y-2.5 text-xs">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+      <div class="font-bold text-slate-800 truncate pr-2" id="popover-title">กรองข้อมูล</div>
+      <button type="button" onclick="closeFilterPopover()" class="text-slate-400 hover:text-slate-700 px-1.5 py-0.5 rounded hover:bg-slate-100">✕</button>
+    </div>
+
+    <!-- Quick Sort Buttons inside Filter Popover (like Excel) -->
+    <div class="grid grid-cols-2 gap-1.5">
+      <button type="button" onclick="applySortFromPopover('asc')" class="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200 font-medium text-[11px] flex items-center justify-center gap-1 transition">
+        <span>↑</span> เรียงน้อย → มาก
+      </button>
+      <button type="button" onclick="applySortFromPopover('desc')" class="px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200 font-medium text-[11px] flex items-center justify-center gap-1 transition">
+        <span>↓</span> เรียงมาก → น้อย
+      </button>
+    </div>
+
+    <!-- Search inside checkbox options -->
+    <div class="relative">
+      <input
+        type="text"
+        id="popover-search"
+        placeholder="ค้นหาตัวเลือก..."
+        oninput="renderPopoverOptions()"
+        class="w-full pl-7 pr-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+      >
+      <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </div>
+
+    <!-- Select All Checkbox -->
+    <div class="flex items-center justify-between px-1.5 py-1 bg-slate-50 rounded-lg border border-slate-100">
+      <label class="flex items-center gap-2 cursor-pointer select-none font-semibold text-slate-700">
+        <input type="checkbox" id="popover-select-all" onchange="togglePopoverSelectAll(this.checked)" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+        <span>เลือกทั้งหมด</span>
+      </label>
+      <span id="popover-selected-info" class="text-[11px] text-slate-500"></span>
+    </div>
+
+    <!-- Options List -->
+    <div id="popover-options-list" class="max-h-52 overflow-y-auto divide-y divide-slate-50 border border-slate-100 rounded-lg px-1">
+      <!-- Rendered dynamically -->
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-100">
+      <button type="button" onclick="clearCurrentColumnFilter()" class="px-2.5 py-1.5 rounded-lg text-rose-600 hover:bg-rose-50 font-semibold transition">
+        ล้างตัวกรองนี้
+      </button>
+      <div class="flex items-center gap-1.5">
+        <button type="button" onclick="closeFilterPopover()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
+          ยกเลิก
+        </button>
+        <button type="button" onclick="applyCurrentColumnFilter()" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-sm transition">
+          ตกลง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCRIPT ==================== -->
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxrrEY0quLbnS65lNnEEULBeF8Dyddwafyq6XrD6bX8GZ7RO-D50Luat4yVi4rJ_Pavjw/exec";
+    const SESSION_KEY = "yrn2570_admin_auth_key";
+    const BLANK_TOKEN = "(ค่าว่าง)";
+
+    const COLUMNS = [
+      { key: "applyDate", label: "วันที่สมัคร", width: "min-w-[115px]", type: "date" },
+      { key: "applyTime", label: "เวลาที่สมัคร", width: "min-w-[105px]", type: "time" },
+      { key: "prefix",    label: "คำนำหน้า", width: "min-w-[95px]",  type: "text" },
+      { key: "fullName",  label: "ชื่อ-นามสกุล", width: "min-w-[180px]", type: "text" },
+      { key: "nickname",  label: "ชื่อเล่น", width: "min-w-[100px]", type: "text" },
+      { key: "grade",     label: "ระดับชั้น", width: "min-w-[130px]", type: "text" },
+      { key: "school",    label: "โรงเรียน", width: "min-w-[220px]", type: "text" },
+      { key: "phone",     label: "โทรศัพท์", width: "min-w-[130px]", type: "text" },
+      { key: "channel",   label: "รู้ช่องทางการสมัครจาก", width: "min-w-[220px]", type: "text" }
+    ];
+
+    let AUTH_KEY = "";
+    let ALL_ROWS = [];
+    let FILTERED_ROWS = [];
+    let isLoading = false;
+
+    // Filter & Sort State
+    let globalSearch = "";
+    let colSearch = {};       // { colKey: "query" }
+    let colFilter = {};       // { colKey: Set(["val1", "val2"]) }  (undefined = all selected)
+    let sortState = { key: "rowNo", dir: "desc" }; // ค่าเริ่มต้น: ใหม่สุดขึ้นก่อน
+
+    // Excel Popover State
+    let activePopoverCol = null;
+    let popoverDraftSet = new Set();
+    let popoverAllOptions = []; // [{ val, count }]
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderTableHeader();
+
+      // ปิด Filter Popover เมื่อคลิกนอกกล่อง
+      document.addEventListener("pointerdown", (e) => {
+        const pop = document.getElementById("excel-filter-popover");
+        if (pop && !pop.classList.contains("hidden")) {
+          if (!pop.contains(e.target) && !e.target.closest("[data-filter-btn]")) {
+            closeFilterPopover();
+          }
+        }
+      });
+
+      // ปิด Popover ด้วยปุ่ม ESC
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeFilterPopover();
+      });
+
+      // ตรวจสอบ session เดิม (ไม่ต้องกรอกซ้ำหากเพิ่งล็อกอินในแท็บนี้)
+      const savedKey = sessionStorage.getItem(SESSION_KEY);
+      if (savedKey) {
+        AUTH_KEY = savedKey;
+        showAppScreen();
+        fetchApplicants();
+      } else {
+        const pwdEl = document.getElementById("admin-password");
+        if (pwdEl) pwdEl.focus();
+      }
+    });
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById("admin-password");
+      if (!input) return;
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const input = document.getElementById("admin-password");
+      const errBox = document.getElementById("login-error");
+      const btn = document.getElementById("btn-login");
+      const spinner = document.getElementById("login-spinner");
+      const btnText = document.getElementById("login-btn-text");
+
+      const pwd = (input.value || "").trim();
+      if (!pwd) return;
+
+      errBox.classList.add("hidden");
+      btn.disabled = true;
+      spinner.classList.remove("hidden");
+      btnText.textContent = "กำลังตรวจสอบสิทธิ์และโหลดข้อมูล...";
+
+      try {
+        const res = await fetch(`${API_URL}?mode=applicants&key=${encodeURIComponent(pwd)}&t=${Date.now()}`, {
+          method: "GET",
+          redirect: "follow"
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+
+        if (json.error) {
+          throw new Error(json.error);
+        }
+
+        AUTH_KEY = pwd;
+        sessionStorage.setItem(SESSION_KEY, pwd);
+        input.value = "";
+
+        applyFetchedData(json);
+        showAppScreen();
+      } catch (err) {
+        console.error("Login failed:", err);
+        errBox.textContent = err.message === "รหัสผ่านไม่ถูกต้อง"
+          ? "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+          : `เข้าสู่ระบบไม่สำเร็จ: ${err.message}`;
+        errBox.classList.remove("hidden");
+        input.focus();
+        input.select();
+      } finally {
+        btn.disabled = false;
+        spinner.classList.add("hidden");
+        btnText.textContent = "เข้าสู่ระบบตรวจสอบรายชื่อ";
+      }
+    }
+
+    function showAppScreen() {
+      document.getElementById("login-screen").classList.add("hidden");
+      document.getElementById("app-screen").classList.remove("hidden");
+    }
+
+    function handleLogout() {
+      AUTH_KEY = "";
+      ALL_ROWS = [];
+      FILTERED_ROWS = [];
+      sessionStorage.removeItem(SESSION_KEY);
+      resetAllFilters(false);
+      closeFilterPopover();
+      document.getElementById("app-screen").classList.add("hidden");
+      document.getElementById("login-screen").classList.remove("hidden");
+      const pwdEl = document.getElementById("admin-password");
+      if (pwdEl) {
+        pwdEl.value = "";
+        pwdEl.focus();
+      }
+    }
+
+    async function fetchApplicants() {
+      if (isLoading || !AUTH_KEY) return;
+      isLoading = true;
+
+      const btnRefresh = document.getElementById("btn-refresh");
+      const refreshIcon = document.getElementById("refresh-icon");
+      const statusText = document.getElementById("status-text");
+      const statusDot = document.getElementById("status-dot");
+
+      if (btnRefresh) btnRefresh.disabled = true;
+      if (refreshIcon) refreshIcon.classList.add("animate-spin");
+      if (statusText) statusText.textContent = "กำลังซิงค์ข้อมูลล่าสุด...";
+      if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-amber-500 animate-ping";
+
+      try {
+        const res = await fetch(`${API_URL}?mode=applicants&key=${encodeURIComponent(AUTH_KEY)}&t=${Date.now()}`, {
+          method: "GET",
+          redirect: "follow"
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+
+        if (json.error === "รหัสผ่านไม่ถูกต้อง") {
+          handleLogout();
+          return;
+        }
+        if (json.error) throw new Error(json.error);
+
+        applyFetchedData(json);
+
+        if (statusText) statusText.textContent = "ข้อมูลสดล่าสุด (Real-time)";
+        if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+      } catch (err) {
+        console.error("Fetch applicants failed:", err);
+        if (statusText) statusText.textContent = "โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่";
+        if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-rose-500";
+      } finally {
+        isLoading = false;
+        if (btnRefresh) btnRefresh.disabled = false;
+        if (refreshIcon) refreshIcon.classList.remove("animate-spin");
+      }
+    }
+
+    function applyFetchedData(json) {
+      ALL_ROWS = (json.applicants || []).map((r, idx) => ({
+        rowNo: r.rowNo || (idx + 1),
+        applyDate: (r.applyDate || "").trim(),
+        applyTime: (r.applyTime || "").trim(),
+        prefix: (r.prefix || "").trim(),
+        fullName: (r.fullName || "").trim(),
+        nickname: (r.nickname || "").trim(),
+        grade: (r.grade || "").trim(),
+        school: (r.school || "").trim(),
+        phone: (r.phone || "").trim(),
+        channel: (r.channel || "").trim()
+      }));
+
+      document.getElementById("header-updated-date").textContent = json.updatedDate || "--";
+      document.getElementById("header-updated-time").textContent = json.updatedTime || "--";
+
+      applyFiltersAndRender();
+    }
+
+    // ==================== TABLE HEADER (SORT + FILTER + PER-COLUMN SEARCH) ====================
+    function renderTableHeader() {
+      const thead = document.getElementById("table-head");
+      if (!thead) return;
+
+      const headerCells = COLUMNS.map(col => {
+        const isSorted = sortState.key === col.key;
+        const sortIcon = isSorted
+          ? (sortState.dir === "asc" ? "▲" : "▼")
+          : "⇅";
+        const sortClass = isSorted ? "text-emerald-700 font-extrabold" : "text-slate-400";
+        const isFiltered = Boolean(colFilter[col.key]);
+        const filterBtnClass = isFiltered
+          ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+          : "bg-white text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-slate-700";
+
+        return `
+          <th class="${col.width} bg-slate-100 border-b border-r border-slate-200/80 px-2.5 py-2.5 font-bold text-slate-700 select-none whitespace-nowrap">
+            <div class="flex items-center justify-between gap-1.5">
+              <button
+                type="button"
+                onclick="toggleSort('${col.key}')"
+                class="flex items-center gap-1 hover:text-emerald-700 transition text-left flex-1 min-w-0"
+                title="คลิกเพื่อเรียงลำดับตาม ${col.label}"
+              >
+                <span class="truncate">${col.label}</span>
+                <span class="text-[10px] ${sortClass} shrink-0">${sortIcon}</span>
+              </button>
+              <button
+                type="button"
+                data-filter-btn="${col.key}"
+                onclick="openFilterPopover('${col.key}', this)"
+                title="กรองข้อมูลแบบ Excel (${col.label})"
+                class="inline-flex items-center justify-center w-6 h-6 rounded-md border transition shrink-0 ${filterBtnClass}"
+              >
+                <svg class="w-3.5 h-3.5" fill="${isFiltered ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                </svg>
+              </button>
+            </div>
+          </th>
+        `;
+      }).join("");
+
+      const searchCells = COLUMNS.map(col => {
+        const val = colSearch[col.key] || "";
+        return `
+          <th class="bg-slate-50 border-b border-r border-slate-200/80 px-1.5 py-1.5 font-normal">
+            <div class="relative">
+              <input
+                type="text"
+                data-col-search="${col.key}"
+                value="${escapeHtml(val)}"
+                placeholder="ค้นหา..."
+                oninput="handleColSearch('${col.key}', this.value)"
+                class="w-full pl-2 pr-5 py-1 text-[11px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              >
+              <button
+                type="button"
+                data-col-clear="${col.key}"
+                onclick="clearColSearch('${col.key}')"
+                class="${val ? '' : 'hidden'} absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-500 text-[10px] px-1"
+                title="ล้างช่องค้นหานี้"
+              >✕</button>
+            </div>
+          </th>
+        `;
+      }).join("");
+
+      thead.innerHTML = `
+        <tr>
+          <th class="w-12 bg-slate-100 border-b border-r border-slate-200/80 px-2.5 py-2.5 text-center font-bold text-slate-500">
+            <button type="button" onclick="toggleSort('rowNo')" title="เรียงตามลำดับการสมัคร" class="hover:text-emerald-700">
+              # ${sortState.key === 'rowNo' ? (sortState.dir === 'asc' ? '▲' : '▼') : ''}
+            </button>
+          </th>
+          ${headerCells}
+        </tr>
+        <tr class="search-row">
+          <th class="bg-slate-50 border-b border-r border-slate-200/80 px-2 py-1.5 text-center text-[10px] text-slate-400 font-medium">
+            ค้นหา
+          </th>
+          ${searchCells}
+        </tr>
+      `;
+    }
+
+    function updateHeaderIndicators() {
+      // อัปเดตเฉพาะปุ่ม Sort & Filter โดยไม่สร้าง input ใหม่ (ไม่ให้หลุด focus ตอนกำลังพิมพ์)
+      const thead = document.getElementById("table-head");
+      if (!thead) return;
+
+      const sortRow = thead.querySelector("tr:first-child");
+      if (!sortRow) return;
+
+      const ths = sortRow.querySelectorAll("th");
+      // คอลัมน์แรก (#)
+      if (ths[0]) {
+        const btn = ths[0].querySelector("button");
+        if (btn) btn.innerHTML = `# ${sortState.key === 'rowNo' ? (sortState.dir === 'asc' ? '▲' : '▼') : ''}`;
+      }
+
+      COLUMNS.forEach((col, idx) => {
+        const th = ths[idx + 1];
+        if (!th) return;
+        const isSorted = sortState.key === col.key;
+        const sortSpan = th.querySelector("button:first-child span:last-child");
+        if (sortSpan) {
+          sortSpan.textContent = isSorted ? (sortState.dir === "asc" ? "▲" : "▼") : "⇅";
+          sortSpan.className = `text-[10px] shrink-0 ${isSorted ? "text-emerald-700 font-extrabold" : "text-slate-400"}`;
+        }
+
+        const isFiltered = Boolean(colFilter[col.key]);
+        const filterBtn = th.querySelector(`[data-filter-btn="${col.key}"]`);
+        if (filterBtn) {
+          filterBtn.className = `inline-flex items-center justify-center w-6 h-6 rounded-md border transition shrink-0 ${
+            isFiltered
+              ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+              : "bg-white text-slate-500 border-slate-200 hover:bg-slate-100 hover:text-slate-700"
+          }`;
+          const svg = filterBtn.querySelector("svg");
+          if (svg) svg.setAttribute("fill", isFiltered ? "currentColor" : "none");
+        }
+      });
+    }
+
+    // ==================== SEARCH, FILTER & SORT LOGIC ====================
+    function handleGlobalSearch(val) {
+      globalSearch = val.trim().toLowerCase();
+      document.getElementById("btn-clear-global").classList.toggle("hidden", !globalSearch);
+      applyFiltersAndRender();
+    }
+
+    function clearGlobalSearch() {
+      const el = document.getElementById("global-search");
+      if (el) el.value = "";
+      handleGlobalSearch("");
+    }
+
+    function handleColSearch(key, val) {
+      const trimmed = val.trim().toLowerCase();
+      if (trimmed) colSearch[key] = trimmed;
+      else delete colSearch[key];
+
+      const clearBtn = document.querySelector(`[data-col-clear="${key}"]`);
+      if (clearBtn) clearBtn.classList.toggle("hidden", !trimmed);
+
+      applyFiltersAndRender();
+    }
+
+    function clearColSearch(key) {
+      delete colSearch[key];
+      const input = document.querySelector(`[data-col-search="${key}"]`);
+      if (input) input.value = "";
+      const clearBtn = document.querySelector(`[data-col-clear="${key}"]`);
+      if (clearBtn) clearBtn.classList.add("hidden");
+      applyFiltersAndRender();
+    }
+
+    function toggleSort(key) {
+      if (sortState.key === key) {
+        sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+      } else {
+        sortState = { key, dir: key === "rowNo" || key === "applyDate" ? "desc" : "asc" };
+      }
+      updateHeaderIndicators();
+      applyFiltersAndRender();
+    }
+
+    function parseThaiDateValue(dateStr) {
+      if (!dateStr) return 0;
+      // รองรับ DD-MM-YYYY หรือ DD/MM/YYYY
+      const dmy = dateStr.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
+      if (dmy) {
+        return Number(dmy[3]) * 10000 + Number(dmy[2]) * 100 + Number(dmy[1]);
+      }
+      // รองรับ YYYY-MM-DD
+      const ymd = dateStr.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/);
+      if (ymd) {
+        return Number(ymd[1]) * 10000 + Number(ymd[2]) * 100 + Number(ymd[3]);
+      }
+      return 0;
+    }
+
+    function parseTimeValue(timeStr) {
+      if (!timeStr) return 0;
+      const m = timeStr.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+      if (!m) return 0;
+      return Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3] || 0);
+    }
+
+    function compareRows(a, b, key, dir) {
+      const mult = dir === "asc" ? 1 : -1;
+      if (key === "rowNo") {
+        return (a.rowNo - b.rowNo) * mult;
+      }
+      if (key === "applyDate") {
+        const da = parseThaiDateValue(a.applyDate);
+        const db = parseThaiDateValue(b.applyDate);
+        if (da !== db) return (da - db) * mult;
+        // ถ้าวันเดียวกัน เรียงต่อด้วยเวลา
+        return (parseTimeValue(a.applyTime) - parseTimeValue(b.applyTime)) * mult;
+      }
+      if (key === "applyTime") {
+        return (parseTimeValue(a.applyTime) - parseTimeValue(b.applyTime)) * mult;
+      }
+      return (a[key] || "").localeCompare(b[key] || "", "th", { numeric: true, sensitivity: "base" }) * mult;
+    }
+
+    function getDisplayCellToken(val) {
+      return val && val.trim() !== "" ? val.trim() : BLANK_TOKEN;
+    }
+
+    function applyFiltersAndRender() {
+      let rows = ALL_ROWS.filter(row => {
+        // 1. Global search
+        if (globalSearch) {
+          const hitGlobal = COLUMNS.some(c => (row[c.key] || "").toLowerCase().includes(globalSearch));
+          if (!hitGlobal) return false;
+        }
+
+        // 2. Per-column text search
+        for (const [key, q] of Object.entries(colSearch)) {
+          if (q && !(row[key] || "").toLowerCase().includes(q)) {
+            return false;
+          }
+        }
+
+        // 3. Per-column Excel checkbox filter
+        for (const [key, allowedSet] of Object.entries(colFilter)) {
+          if (allowedSet) {
+            const token = getDisplayCellToken(row[key]);
+            if (!allowedSet.has(token)) return false;
+          }
+        }
+
+        return true;
+      });
+
+      // Sort
+      rows.sort((a, b) => compareRows(a, b, sortState.key, sortState.dir));
+      FILTERED_ROWS = rows;
+
+      renderTableBody();
+      renderActiveChips();
+      updateHeaderIndicators();
+    }
+
+    function renderTableBody() {
+      const tbody = document.getElementById("table-body");
+      if (!tbody) return;
+
+      const total = ALL_ROWS.length;
+      const shown = FILTERED_ROWS.length;
+
+      document.getElementById("header-filtered-count").textContent = shown;
+      document.getElementById("header-total-suffix").textContent = shown === total ? "คน" : `/ ${total} คน`;
+      document.getElementById("table-summary-text").textContent = `แสดง ${shown.toLocaleString()} จากทั้งหมด ${total.toLocaleString()} รายการ`;
+
+      if (shown === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" class="py-16 text-center text-slate-400 text-sm">
+              ${total === 0 ? "ไม่พบข้อมูลผู้สมัคร" : "ไม่พบรายชื่อที่ตรงกับเงื่อนไขการค้นหาหรือตัวกรอง"}
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const html = FILTERED_ROWS.map((row, idx) => {
+        const cleanPhoneDigits = (row.phone || "").replace(/[^\d+]/g, "");
+        const phoneHtml = row.phone
+          ? `<a href="tel:${escapeHtml(cleanPhoneDigits)}" class="text-emerald-700 hover:underline font-medium whitespace-nowrap">${escapeHtml(row.phone)}</a>`
+          : `<span class="text-slate-300">-</span>`;
+
+        return `
+          <tr class="even:bg-slate-50/50 hover:bg-emerald-50/60 transition-colors">
+            <td class="px-2.5 py-2.5 text-center text-slate-400 font-medium border-r border-slate-100 whitespace-nowrap">${idx + 1}</td>
+            <td class="px-2.5 py-2.5 text-slate-700 border-r border-slate-100 whitespace-nowrap">${escapeHtml(row.applyDate) || '<span class="text-slate-300">-</span>'}</td>
+            <td class="px-2.5 py-2.5 text-slate-500 border-r border-slate-100 whitespace-nowrap font-mono text-[11px] sm:text-xs">${escapeHtml(row.applyTime) || '<span class="text-slate-300">-</span>'}</td>
+            <td class="px-2.5 py-2.5 text-slate-600 border-r border-slate-100 whitespace-nowrap">${escapeHtml(row.prefix) || '<span class="text-slate-300">-</span>'}</td>
+            <td class="px-2.5 py-2.5 text-slate-900 font-semibold border-r border-slate-100 whitespace-nowrap">${escapeHtml(row.fullName) || '<span class="text-slate-300">-</span>'}</td>
+            <td class="px-2.5 py-2.5 border-r border-slate-100 whitespace-nowrap">
+              ${row.nickname ? `<span class="inline-flex px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 font-semibold text-xs">${escapeHtml(row.nickname)}</span>` : '<span class="text-slate-300">-</span>'}
+            </td>
+            <td class="px-2.5 py-2.5 text-slate-700 border-r border-slate-100 whitespace-nowrap">${escapeHtml(row.grade) || '<span class="text-slate-300">-</span>'}</td>
+            <td class="px-2.5 py-2.5 text-slate-800 border-r border-slate-100">${escapeHtml(row.school) || '<span class="text-slate-300">-</span>'}</td>
+            <td class="px-2.5 py-2.5 border-r border-slate-100 whitespace-nowrap">${phoneHtml}</td>
+            <td class="px-2.5 py-2.5 text-slate-600">${escapeHtml(row.channel) || '<span class="text-slate-300">-</span>'}</td>
+          </tr>
+        `;
+      }).join("");
+
+      tbody.innerHTML = html;
+    }
+
+    function renderActiveChips() {
+      const bar = document.getElementById("active-chips-bar");
+      const list = document.getElementById("active-chips-list");
+      const btnReset = document.getElementById("btn-reset-all");
+      const badge = document.getElementById("active-filter-badge");
+
+      const chips = [];
+
+      if (globalSearch) {
+        chips.push({
+          label: `ค้นหารวม: "${globalSearch}"`,
+          onRemove: "clearGlobalSearch()"
+        });
+      }
+
+      COLUMNS.forEach(col => {
+        if (colSearch[col.key]) {
+          chips.push({
+            label: `${col.label} มีคำว่า "${colSearch[col.key]}"`,
+            onRemove: `clearColSearch('${col.key}')`
+          });
+        }
+        if (colFilter[col.key]) {
+          const vals = Array.from(colFilter[col.key]);
+          const preview = vals.length <= 2 ? vals.join(", ") : `${vals.slice(0, 2).join(", ")} +${vals.length - 2}`;
+          chips.push({
+            label: `${col.label}: ${preview}`,
+            onRemove: `removeColFilter('${col.key}')`
+          });
+        }
+      });
+
+      const count = chips.length;
+      if (btnReset) btnReset.disabled = count === 0;
+      if (badge) {
+        badge.textContent = count;
+        badge.classList.toggle("hidden", count === 0);
+      }
+
+      if (count === 0) {
+        bar.classList.add("hidden");
+        list.innerHTML = "";
+        return;
+      }
+
+      bar.classList.remove("hidden");
+      list.innerHTML = chips.map(ch => `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium text-[11px]">
+          <span>${escapeHtml(ch.label)}</span>
+          <button type="button" onclick="${ch.onRemove}" class="text-emerald-600 hover:text-rose-600 font-bold leading-none">✕</button>
+        </span>
+      `).join("");
+    }
+
+    function removeColFilter(key) {
+      delete colFilter[key];
+      applyFiltersAndRender();
+    }
+
+    function resetAllFilters(shouldRender = true) {
+      globalSearch = "";
+      colSearch = {};
+      colFilter = {};
+      sortState = { key: "rowNo", dir: "desc" };
+
+      const gInput = document.getElementById("global-search");
+      if (gInput) gInput.value = "";
+      const gClear = document.getElementById("btn-clear-global");
+      if (gClear) gClear.classList.add("hidden");
+
+      document.querySelectorAll("[data-col-search]").forEach(el => { el.value = ""; });
+      document.querySelectorAll("[data-col-clear]").forEach(el => { el.classList.add("hidden"); });
+
+      closeFilterPopover();
+      if (shouldRender) applyFiltersAndRender();
+    }
+
+    // ==================== EXCEL-STYLE FILTER POPOVER ====================
+    function openFilterPopover(colKey, triggerBtn) {
+      const pop = document.getElementById("excel-filter-popover");
+      if (!pop) return;
+
+      // กดซ้ำที่คอลัมน์เดิมให้ปิด
+      if (activePopoverCol === colKey && !pop.classList.contains("hidden")) {
+        closeFilterPopover();
+        return;
+      }
+
+      activePopoverCol = colKey;
+      const colMeta = COLUMNS.find(c => c.key === colKey);
+      document.getElementById("popover-title").textContent = `กรอง: ${colMeta ? colMeta.label : colKey}`;
+      document.getElementById("popover-search").value = "";
+
+      // นับความถี่ของค่าทั้งหมดในคอลัมน์นี้ (อิงจากแถวที่ผ่านตัวกรองของคอลัมน์อื่น เหมือน Excel!)
+      const countsMap = {};
+      ALL_ROWS.forEach(row => {
+        // เช็คเงื่อนไขอื่นยกเว้น colFilter ของคอลัมน์ตัวเอง
+        if (globalSearch && !COLUMNS.some(c => (row[c.key] || "").toLowerCase().includes(globalSearch))) return;
+        for (const [k, q] of Object.entries(colSearch)) {
+          if (k !== colKey && q && !(row[k] || "").toLowerCase().includes(q)) return;
+        }
+        for (const [k, allowed] of Object.entries(colFilter)) {
+          if (k !== colKey && allowed && !allowed.has(getDisplayCellToken(row[k]))) return;
+        }
+        const token = getDisplayCellToken(row[colKey]);
+        countsMap[token] = (countsMap[token] || 0) + 1;
+      });
+
+      // เพิ่มค่าที่อาจถูกเลือกค้างไว้ใน colFilter เดิมด้วยเพื่อไม่ให้หายจากรายการ
+      if (colFilter[colKey]) {
+        colFilter[colKey].forEach(v => {
+          if (!Object.prototype.hasOwnProperty.call(countsMap, v)) countsMap[v] = 0;
+        });
+      }
+
+      popoverAllOptions = Object.keys(countsMap)
+        .sort((a, b) => {
+          if (a === BLANK_TOKEN) return 1;
+          if (b === BLANK_TOKEN) return -1;
+          if (colMeta && colMeta.type === "date") {
+            return parseThaiDateValue(b) - parseThaiDateValue(a);
+          }
+          return a.localeCompare(b, "th", { numeric: true, sensitivity: "base" });
+        })
+        .map(val => ({ val, count: countsMap[val] }));
+
+      // ตั้งค่าติ๊กเริ่มต้น
+      if (colFilter[colKey]) {
+        popoverDraftSet = new Set(colFilter[colKey]);
+      } else {
+        popoverDraftSet = new Set(popoverAllOptions.map(o => o.val));
+      }
+
+      renderPopoverOptions();
+
+      // แสดงและจัดตำแหน่งไม่ให้หลุดขอบจอ
+      pop.classList.remove("hidden");
+      const rect = triggerBtn.getBoundingClientRect();
+      const popW = pop.offsetWidth;
+      const popH = pop.offsetHeight;
+
+      let left = rect.right - popW;
+      left = Math.max(12, Math.min(left, window.innerWidth - popW - 12));
+
+      let top = rect.bottom + 6;
+      if (top + popH > window.innerHeight - 12) {
+        top = Math.max(12, rect.top - popH - 6);
+      }
+
+      pop.style.left = `${Math.round(left)}px`;
+      pop.style.top = `${Math.round(top)}px`;
+
+      setTimeout(() => document.getElementById("popover-search").focus(), 30);
+    }
+
+    function renderPopoverOptions() {
+      const listEl = document.getElementById("popover-options-list");
+      const q = (document.getElementById("popover-search").value || "").trim().toLowerCase();
+
+      const visibleOptions = q
+        ? popoverAllOptions.filter(o => o.val.toLowerCase().includes(q))
+        : popoverAllOptions;
+
+      if (visibleOptions.length === 0) {
+        listEl.innerHTML = `<div class="py-6 text-center text-slate-400">ไม่พบตัวเลือก</div>`;
+      } else {
+        listEl.innerHTML = visibleOptions.map((opt, idx) => {
+          const checked = popoverDraftSet.has(opt.val) ? "checked" : "";
+          return `
+            <label class="flex items-center justify-between gap-2 px-1.5 py-1.5 hover:bg-slate-50 cursor-pointer select-none">
+              <span class="flex items-center gap-2 min-w-0">
+                <input
+                  type="checkbox"
+                  ${checked}
+                  onchange="togglePopoverOption(${idx}, this.checked)"
+                  data-opt-val="${escapeHtml(opt.val)}"
+                  class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 shrink-0"
+                >
+                <span class="truncate text-slate-700" title="${escapeHtml(opt.val)}">${escapeHtml(opt.val)}</span>
+              </span>
+              <span class="text-[11px] text-slate-400 font-medium shrink-0">(${opt.count})</span>
+            </label>
+          `;
+        }).join("");
+      }
+
+      // อัปเดตสถานะ Checkbox "เลือกทั้งหมด"
+      const selectAllEl = document.getElementById("popover-select-all");
+      const allVisibleChecked = visibleOptions.length > 0 && visibleOptions.every(o => popoverDraftSet.has(o.val));
+      const someVisibleChecked = visibleOptions.some(o => popoverDraftSet.has(o.val));
+      selectAllEl.checked = allVisibleChecked;
+      selectAllEl.indeterminate = !allVisibleChecked && someVisibleChecked;
+
+      document.getElementById("popover-selected-info").textContent = `${popoverDraftSet.size}/${popoverAllOptions.length}`;
+    }
+
+    function togglePopoverOption(visibleIdx, isChecked) {
+      const q = (document.getElementById("popover-search").value || "").trim().toLowerCase();
+      const visibleOptions = q
+        ? popoverAllOptions.filter(o => o.val.toLowerCase().includes(q))
+        : popoverAllOptions;
+      const opt = visibleOptions[visibleIdx];
+      if (!opt) return;
+
+      if (isChecked) popoverDraftSet.add(opt.val);
+      else popoverDraftSet.delete(opt.val);
+
+      renderPopoverOptions();
+    }
+
+    function togglePopoverSelectAll(isChecked) {
+      const q = (document.getElementById("popover-search").value || "").trim().toLowerCase();
+      const visibleOptions = q
+        ? popoverAllOptions.filter(o => o.val.toLowerCase().includes(q))
+        : popoverAllOptions;
+
+      visibleOptions.forEach(o => {
+        if (isChecked) popoverDraftSet.add(o.val);
+        else popoverDraftSet.delete(o.val);
+      });
+      renderPopoverOptions();
+    }
+
+    function applySortFromPopover(dir) {
+      if (!activePopoverCol) return;
+      sortState = { key: activePopoverCol, dir };
+      applyFiltersAndRender();
+      closeFilterPopover();
+    }
+
+    function applyCurrentColumnFilter() {
+      if (!activePopoverCol) return;
+      if (popoverDraftSet.size === popoverAllOptions.length) {
+        delete colFilter[activePopoverCol];
+      } else {
+        colFilter[activePopoverCol] = new Set(popoverDraftSet);
+      }
+      applyFiltersAndRender();
+      closeFilterPopover();
+    }
+
+    function clearCurrentColumnFilter() {
+      if (!activePopoverCol) return;
+      delete colFilter[activePopoverCol];
+      applyFiltersAndRender();
+      closeFilterPopover();
+    }
+
+    function closeFilterPopover() {
+      const pop = document.getElementById("excel-filter-popover");
+      if (pop) pop.classList.add("hidden");
+      activePopoverCol = null;
+    }
+
+    // ==================== EXPORT CSV (สำหรับเปิดใน Excel ภาษาไทยไม่เพี้ยน) ====================
+    function exportFilteredCSV() {
+      if (FILTERED_ROWS.length === 0) {
+        alert("ไม่มีข้อมูลสำหรับดาวน์โหลด");
+        return;
+      }
+
+      const headers = ["ลำดับ", ...COLUMNS.map(c => c.label)];
+      const csvEscape = (v) => `"${String(v || "").replace(/"/g, '""')}"`;
+
+      const lines = [headers.map(csvEscape).join(",")];
+      FILTERED_ROWS.forEach((row, idx) => {
+        const phoneForExcel = row.phone ? `="${row.phone.replace(/"/g, '""')}"` : '""';
+        const line = [
+          csvEscape(idx + 1),
+          csvEscape(row.applyDate),
+          csvEscape(row.applyTime),
+          csvEscape(row.prefix),
+          csvEscape(row.fullName),
+          csvEscape(row.nickname),
+          csvEscape(row.grade),
+          csvEscape(row.school),
+          phoneForExcel,
+          csvEscape(row.channel)
+        ].join(",");
+        lines.push(line);
+      });
+
+      // ใส่ UTF-8 BOM (\uFEFF) เพื่อให้ Microsoft Excel อ่านภาษาไทยได้ทันที
+      const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const now = new Date();
+      const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+      a.href = url;
+      a.download = `รายชื่อผู้สมัคร_Youngรักษ์น่าน2570_${stamp}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
