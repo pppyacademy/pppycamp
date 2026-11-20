@@ -56,35 +56,51 @@
   <!-- Header Section -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5">
-        <div class="min-w-0">
-          <div class="flex items-center gap-2 mb-1 flex-wrap">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-100 text-emerald-800">
-              🌱 เพาะพันธุ์ปัญญา
-            </span>
-            <span id="status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-slate-100 text-slate-600">
-              <span id="status-dot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-              <span id="status-text">กำลังโหลดข้อมูล...</span>
-            </span>
-          </div>
-          <!-- หัวข้อ 1 บรรทัดไม่ล้นบนมือถือ -->
-          <h1
-            class="font-bold text-slate-900 tracking-tight whitespace-nowrap leading-snug"
-            style="font-size: clamp(0.82rem, 3.6vw, 1.5rem);"
-          >
-            สถานะการสมัคร Young รักษ์น่าน 2570: <span id="header-total" class="text-emerald-600 font-extrabold">--</span> คน
-          </h1>
-          <p class="text-[11px] sm:text-xs text-slate-500 mt-1 flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-slate-400 inline shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            Updated: <strong class="text-slate-700 font-semibold" id="header-updated-date">--</strong> เวลา <strong class="text-slate-700 font-semibold" id="header-updated-time">--</strong>
-          </p>
+      <div class="flex flex-col gap-1.5">
+        <!-- Row 1: Badges -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-100 text-emerald-800">
+            🌱 เพาะพันธุ์ปัญญา
+          </span>
+          <span id="status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-slate-100 text-slate-600">
+            <span id="status-dot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+            <span id="status-text">กำลังโหลดข้อมูล...</span>
+          </span>
         </div>
-        <!-- Refresh Button -->
-        <div class="flex items-center gap-2 shrink-0">
-          <button id="btn-refresh" onclick="fetchLiveData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-60 text-slate-700 transition">
-            <svg id="refresh-icon" class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span>กำลังรีเฟรชข้อมูล ...</span>
+
+        <!-- Row 2: Title + Highlighted Total Count -->
+        <div class="flex items-center gap-2 sm:gap-3 flex-nowrap overflow-hidden">
+          <h1
+            class="font-bold text-slate-900 tracking-tight whitespace-nowrap leading-snug truncate"
+            style="font-size: clamp(0.84rem, 3.45vw, 1.5rem);"
+          >
+            สถานะการสมัคร Young รักษ์น่าน 2570
+          </h1>
+          <span class="inline-flex items-baseline gap-1 px-2.5 py-0.5 sm:px-3.5 sm:py-1 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm ring-2 ring-emerald-200/80 whitespace-nowrap shrink-0">
+            <span id="header-total" class="text-lg sm:text-2xl md:text-3xl font-extrabold leading-none tracking-tight">--</span>
+            <span class="text-[11px] sm:text-sm font-semibold text-emerald-50">คน</span>
+          </span>
+        </div>
+
+        <!-- Row 3: Compact Refresh Button + Updated Timestamp -->
+        <div class="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-500">
+          <button
+            id="btn-refresh"
+            onclick="fetchLiveData()"
+            title="รีเฟรชข้อมูลล่าสุด"
+            aria-label="รีเฟรชข้อมูลล่าสุด"
+            class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-100 hover:bg-emerald-100 hover:text-emerald-700 active:scale-95 disabled:opacity-50 text-slate-600 border border-slate-200/90 transition shrink-0"
+          >
+            <svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
           </button>
+          <span class="flex items-center gap-1 flex-wrap">
+            <span>Updated:</span>
+            <strong class="text-slate-700 font-semibold" id="header-updated-date">--</strong>
+            <span>เวลา</span>
+            <strong class="text-slate-700 font-semibold" id="header-updated-time">--</strong>
+          </span>
         </div>
       </div>
     </div>
@@ -95,31 +111,26 @@
 
     <!-- Charts Section -->
     <section>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 items-start">
 
         <!-- Chart 1: รู้ช่องทางการสมัครจาก ... -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-start justify-between gap-2 mb-1">
-            <div>
-              <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
-                <span>📢</span> รู้ช่องทางการสมัครจาก ...
-              </h3>
-              <p id="channels-group-hint" class="hidden text-[11px] text-blue-600/90 mt-0.5">
-                💡 แตะหรือวางเมาส์บนแท่ง "มีคนแนะนำ" / "อื่น ๆ" เพื่อดูรายละเอียด
-              </p>
-            </div>
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>📢</span> รู้ช่องทางการสมัครจาก ...
+            </h3>
             <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 shrink-0" id="badge-channels-count">
               <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
               <span class="text-xs sm:text-sm font-semibold">ช่องทาง</span>
             </span>
           </div>
-          <div class="chart-container flex-1 mt-3" id="container-channels">
+          <div class="chart-container shrink-0" id="container-channels">
             <canvas id="chart-channels"></canvas>
           </div>
         </div>
 
         <!-- Chart 2: วันที่สมัคร -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>📅</span> วันที่สมัคร
@@ -129,13 +140,13 @@
               <span class="text-xs sm:text-sm font-semibold">วัน</span>
             </span>
           </div>
-          <div class="chart-container flex-1" id="container-dates">
+          <div class="chart-container shrink-0" id="container-dates">
             <canvas id="chart-dates"></canvas>
           </div>
         </div>
 
         <!-- Chart 3: โรงเรียน -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🏫</span> โรงเรียน
@@ -145,13 +156,29 @@
               <span class="text-xs sm:text-sm font-semibold">โรงเรียน</span>
             </span>
           </div>
-          <div class="chart-container flex-1" id="container-schools">
+          <div class="chart-container shrink-0" id="container-schools">
             <canvas id="chart-schools"></canvas>
           </div>
         </div>
 
-        <!-- Chart 4: สังกัดของโรงเรียน -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+        <!-- Chart 4: อำเภอที่อาศัย (Fix 16 แท่ง: 15 อำเภอ + นอกจังหวัดน่าน) -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>📍</span> อำเภอที่อาศัย
+            </h3>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-amber-50 text-amber-700 border border-amber-100 shrink-0" id="badge-districts-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">/15 อำเภอ</span>
+            </span>
+          </div>
+          <div class="chart-container shrink-0" id="container-districts">
+            <canvas id="chart-districts"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 5: สังกัดของโรงเรียน -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🏛️</span> สังกัดของโรงเรียน
@@ -161,13 +188,13 @@
               <span class="text-xs sm:text-sm font-semibold">สังกัด</span>
             </span>
           </div>
-          <div class="chart-container flex-1" id="container-affiliations">
+          <div class="chart-container shrink-0" id="container-affiliations">
             <canvas id="chart-affiliations"></canvas>
           </div>
         </div>
 
-        <!-- Chart 5: ระดับชั้น -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+        <!-- Chart 6: ระดับชั้น -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🎓</span> ระดับชั้น
@@ -177,29 +204,13 @@
               <span class="text-xs sm:text-sm font-semibold">ระดับชั้น</span>
             </span>
           </div>
-          <div class="chart-container flex-1" id="container-grades">
+          <div class="chart-container shrink-0" id="container-grades">
             <canvas id="chart-grades"></canvas>
           </div>
         </div>
 
-        <!-- Chart 6: อำเภอที่อาศัย -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between gap-2 mb-4">
-            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
-              <span>📍</span> อำเภอที่อาศัย
-            </h3>
-            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-amber-50 text-amber-700 border border-amber-100 shrink-0" id="badge-districts-count">
-              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
-              <span class="text-xs sm:text-sm font-semibold">อำเภอ</span>
-            </span>
-          </div>
-          <div class="chart-container flex-1" id="container-districts">
-            <canvas id="chart-districts"></canvas>
-          </div>
-        </div>
-
         <!-- Chart 7: ตำบลที่อาศัย -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col lg:col-span-2">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🏡</span> ตำบลที่อาศัย
@@ -209,13 +220,13 @@
               <span class="text-xs sm:text-sm font-semibold">ตำบล</span>
             </span>
           </div>
-          <div class="chart-container" id="container-subdistricts">
+          <div class="chart-container shrink-0" id="container-subdistricts">
             <canvas id="chart-subdistricts"></canvas>
           </div>
         </div>
 
         <!-- Chart 8: อุปกรณ์ที่ใช้สมัคร -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col lg:col-span-2">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>📱</span> อุปกรณ์ที่ใช้สมัคร
@@ -225,7 +236,7 @@
               <span class="text-xs sm:text-sm font-semibold">ประเภท</span>
             </span>
           </div>
-          <div class="chart-container" id="container-devices">
+          <div class="chart-container shrink-0" id="container-devices">
             <canvas id="chart-devices"></canvas>
           </div>
         </div>
@@ -242,7 +253,7 @@
             <span>💬</span> ข้อความจากผู้สมัคร
           </h2>
           <p class="text-xs sm:text-sm text-slate-500 mt-1">
-            คลิกเลือกหัวข้อเพื่อดูข้อความ แรงบันดาลใจ และสิ่งที่ได้เรียนรู้จากน้องๆ แต่ละคน
+            คลิกเลือกหัวข้อเพื่อดูข้อความ แรงบันดาลใจ และสิ่งที่ได้เรียนรู้จากน้องๆ แต่ละคน (เรียงจากล่าสุดก่อน)
           </p>
         </div>
         <!-- Search filter -->
@@ -250,7 +261,7 @@
           <input 
             type="text" 
             id="quote-search" 
-            placeholder="ค้นหาชื่อ, โรงเรียน, หรือข้อความ..." 
+            placeholder="ค้นหาชื่อเล่น, โรงเรียน, หรือข้อความ..." 
             class="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
           >
           <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -320,6 +331,26 @@
     // ========================================================
     const API_URL = "https://script.google.com/macros/s/AKfycbxrrEY0quLbnS65lNnEEULBeF8Dyddwafyq6XrD6bX8GZ7RO-D50Luat4yVi4rJ_Pavjw/exec";
 
+    // รายชื่อ 15 อำเภอจังหวัดน่าน (แท่งที่ 16 คือ "นอกจังหวัดน่าน" อยู่ท้ายสุดเสมอ)
+    const NAN_DISTRICTS = [
+      "เฉลิมพระเกียรติ",
+      "เชียงกลาง",
+      "ท่าวังผา",
+      "ทุ่งช้าง",
+      "นาน้อย",
+      "นาหมื่น",
+      "บ่อเกลือ",
+      "บ้านหลวง",
+      "ปัว",
+      "ภูเพียง",
+      "เมืองน่าน",
+      "แม่จริม",
+      "เวียงสา",
+      "สองแคว",
+      "สันติสุข"
+    ];
+    const OUTSIDE_NAN_LABEL = "นอกจังหวัดน่าน";
+
     let DATA = null;
     let isLoading = false;
     let currentPart = 'why';
@@ -356,7 +387,6 @@
       return `${((value / total) * 100).toFixed(1)}%`;
     }
 
-    // ตรวจสอบข้อมูลอุปกรณ์และหน้าจอปัจจุบัน
     function getDeviceContext() {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -367,8 +397,10 @@
       return { w, h, isPortrait, isTouch, isMobile, isTablet };
     }
 
-    // ระบบตัดสินใจอัตโนมัติว่ากราฟควรแสดง Horizontal หรือ Vertical เพื่อให้อ่านชัดที่สุด
-    function decideChartOrientation(labels, containerEl) {
+    // ตัดสินใจอัตโนมัติว่ากราฟควรแสดง Horizontal หรือ Vertical เพื่อให้อ่านชัดเจนที่สุด
+    function decideChartOrientation(labels, containerEl, forceHorizontal = false) {
+      if (forceHorizontal) return 'y';
+
       const { isPortrait, isMobile, isTablet } = getDeviceContext();
       const itemCount = labels.length;
       if (itemCount === 0) return 'y';
@@ -376,39 +408,36 @@
       const maxLabelLen = Math.max(...labels.map(l => String(l).length), 0);
       const containerWidth = (containerEl && containerEl.clientWidth) ? containerEl.clientWidth : (window.innerWidth - 48);
 
-      // 1. ถ้าชื่อแกนยาวเกินกว่าจะวางแนวตั้งแล้วอ่านง่าย ให้ใช้ Horizontal
       const maxReadableVerticalLabel = isMobile ? 10 : (isTablet ? 13 : 16);
       if (maxLabelLen > maxReadableVerticalLabel) {
         return 'y';
       }
 
-      // 2. คำนวณความกว้างที่ต้องการต่อ 1 แท่งแนวตั้ง (รองรับทั้งป้ายแกน X และตัวเลข+เปอร์เซ็นต์บนหัวแท่ง)
       const plotWidth = Math.max(containerWidth - 52, 200);
       const minSlotPerBar = Math.max(
-        isMobile ? 58 : 74,
-        Math.min(maxLabelLen, 14) * (isMobile ? 6.8 : 7.8) + 14
+        isMobile ? 64 : 78,
+        Math.min(maxLabelLen, 14) * (isMobile ? 7 : 8) + 16
       );
       const maxVerticalBarsFit = Math.floor(plotWidth / minSlotPerBar);
 
-      // 3. จำกัดจำนวนแท่งสูงสุดสำหรับแนวตั้งตามชนิดอุปกรณ์และแนวหน้าจอ
-      let hardVerticalCap = 12;
-      if (isMobile && isPortrait) hardVerticalCap = 5;
-      else if (isMobile && !isPortrait) hardVerticalCap = 8;
-      else if (isTablet && isPortrait) hardVerticalCap = 8;
-      else if (isTablet && !isPortrait) hardVerticalCap = 10;
+      let hardVerticalCap = 10;
+      if (isMobile && isPortrait) hardVerticalCap = 4;
+      else if (isMobile && !isPortrait) hardVerticalCap = 7;
+      else if (isTablet && isPortrait) hardVerticalCap = 7;
+      else if (isTablet && !isPortrait) hardVerticalCap = 9;
 
       if (itemCount > maxVerticalBarsFit || itemCount > hardVerticalCap) {
-        return 'y'; // Horizontal
+        return 'y';
       }
 
-      return 'x'; // Vertical
+      return 'x';
     }
 
-    // ย่อข้อความบนแกนเมื่อหน้าจอแคบมาก เพื่อให้พื้นที่แท่งกราฟยังกว้างชัดเจน (ชื่อเต็มดูได้ใน Tooltip)
+    // ย่อข้อความแกนอย่างเหมาะสมเมื่อจอแคบ (ชื่อเต็มแสดงใน Tooltip เสมอ)
     function shortenAxisLabel(label, isHorizontal) {
       const { isMobile } = getDeviceContext();
       const str = String(label || '');
-      const limit = isHorizontal ? (isMobile ? 18 : 34) : (isMobile ? 10 : 16);
+      const limit = isHorizontal ? (isMobile ? 21 : 34) : (isMobile ? 11 : 16);
       return str.length > limit ? str.slice(0, limit - 1) + '…' : str;
     }
 
@@ -459,7 +488,80 @@
       return { counts: sortedCounts, details: sortedDetails };
     }
 
-    // ซ่อน Custom Tooltip
+    // จัดเตรียมข้อมูลอำเภอ Fix 16 แท่ง (15 อำเภอเรียงมาก->น้อย + แท่งสุดท้าย "นอกจังหวัดน่าน" รวมค่าว่างด้วย)
+    function processDistricts(rawDistricts, totalApplicants) {
+      const nanCounts = {};
+      NAN_DISTRICTS.forEach(d => { nanCounts[d] = 0; });
+
+      let outsideCount = 0;
+
+      for (const [rawKey, rawVal] of Object.entries(rawDistricts || {})) {
+        const val = Number(rawVal) || 0;
+        if (val <= 0) continue;
+
+        const normalized = (rawKey || '')
+          .trim()
+          .replace(/^(อำเภอ|อ\.)\s*/i, '')
+          .trim();
+
+        if (normalized && Object.prototype.hasOwnProperty.call(nanCounts, normalized)) {
+          nanCounts[normalized] += val;
+        } else {
+          // รวมค่าว่าง, "ไม่ต้องระบุ", หรือชื่ออำเภอ/จังหวัดอื่น ลงใน "นอกจังหวัดน่าน"
+          outsideCount += val;
+        }
+      }
+
+      // กรณีมีแถวใน Google Sheet ที่ช่องอำเภอเป็นค่าว่าง (ถูกตัดออกจาก raw.districts) ให้บวกเข้า "นอกจังหวัดน่าน"
+      const nanSum = Object.values(nanCounts).reduce((s, v) => s + v, 0);
+      const accountedTotal = nanSum + outsideCount;
+      if (totalApplicants > accountedTotal) {
+        outsideCount += (totalApplicants - accountedTotal);
+      }
+
+      // เรียง 15 อำเภอจากมากไปน้อย (ถ้าเท่ากันเรียงตามตัวอักษรไทย)
+      const sortedNan = NAN_DISTRICTS.slice().sort((a, b) => {
+        if (nanCounts[b] !== nanCounts[a]) return nanCounts[b] - nanCounts[a];
+        return a.localeCompare(b, 'th');
+      });
+
+      const finalDistricts = {};
+      sortedNan.forEach(d => { finalDistricts[d] = nanCounts[d]; });
+      finalDistricts[OUTSIDE_NAN_LABEL] = outsideCount;
+
+      const activeNanDistrictCount = sortedNan.filter(d => nanCounts[d] > 0).length;
+
+      return { counts: finalDistricts, activeNanDistrictCount };
+    }
+
+    // แยกชื่อเล่น, โรงเรียน และระดับชั้นจากข้อมูลของ Code.gs
+    function parseQuoteMeta(q) {
+      const rawStudent = (q.student || '').trim();
+      const rawSchool = (q.school || '').trim();
+
+      // ดึงชื่อเล่นจากวงเล็บท้ายสุดของ student
+      const nickMatch = rawStudent.match(/\(([^()]+)\)\s*$/);
+      const nickname = nickMatch ? nickMatch[1].trim() : rawStudent;
+
+      // แยกชื่อโรงเรียนและระดับชั้น (รองรับชื่อโรงเรียนที่มีวงเล็บข้างใน เช่น "บ้านดอน (ศรีเสริมกสิกร) (ประถมศึกษา 6)")
+      let schoolName = rawSchool;
+      let grade = '';
+      const gradeMatch = rawSchool.match(/^(.*?)\s*\(((?:ประถมศึกษา|มัธยมศึกษา|ป\.|ม\.|ปวช\.|ปวส\.|อนุบาล|เทียบเท่า|กศน\.|สกร\.)[^()]*)\)\s*$/i);
+      if (gradeMatch) {
+        schoolName = gradeMatch[1].trim();
+        grade = gradeMatch[2].trim();
+      } else {
+        const genericMatch = rawSchool.match(/^(.+?)\s*\(([^()]+)\)\s*$/);
+        if (genericMatch && !/ศรีเสริมกสิกร|บ้านสวนตาล|ประชารัฐวิทยาคาร/i.test(genericMatch[2])) {
+          schoolName = genericMatch[1].trim();
+          grade = genericMatch[2].trim();
+        }
+      }
+
+      const displayLine = `${nickname} - โรงเรียน: ${schoolName}${grade ? ' ' + grade : ''}`;
+      return { nickname, schoolName, grade, displayLine };
+    }
+
     function hideCustomTooltip() {
       const tipEl = document.getElementById('custom-chart-tooltip');
       if (tipEl) {
@@ -467,7 +569,6 @@
       }
     }
 
-    // สร้าง External HTML Tooltip รองรับทั้งกราฟปกติและตารางรายละเอียดของ Grouping
     function createExternalTooltipHandler(datasetTotal, groupDetailsMap = null) {
       return function(context) {
         const { chart, tooltip } = context;
@@ -535,7 +636,6 @@
           tipEl.classList.remove('interactive');
         }
 
-        // คำนวณตำแหน่งให้อยู่ภายในกรอบหน้าจอเสมอ (ไม่หลุดขอบมือถือ)
         tipEl.classList.add('visible');
         const canvasRect = chart.canvas.getBoundingClientRect();
         const tipWidth = tipEl.offsetWidth;
@@ -567,7 +667,6 @@
         });
       }
 
-      // แตะพื้นที่ว่างนอกกราฟเพื่อปิด Tooltip บนมือถือ
       document.addEventListener('pointerdown', (e) => {
         const tipEl = document.getElementById('custom-chart-tooltip');
         if (!e.target.closest('canvas') && !(tipEl && tipEl.contains(e.target))) {
@@ -575,7 +674,6 @@
         }
       });
 
-      // ปรับการจัดวางกราฟอัตโนมัติเมื่อเปลี่ยนขนาดหน้าจอหรือหมุนอุปกรณ์
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
@@ -662,13 +760,13 @@
       }
     }
 
-    // กรองทำความสะอาดข้อมูลและจัดกลุ่มช่องทาง
     function sanitizeData(raw) {
       if (!raw) return null;
 
-      const validQuotes = (raw.quotes || []).filter(q => {
-        return q && q.student && q.student.trim() !== '' && q.student.trim() !== '()';
-      });
+      // กรองแถวว่างออก และกลับลำดับให้ผู้สมัครล่าสุดขึ้นก่อน (Newest first)
+      const validQuotes = (raw.quotes || [])
+        .filter(q => q && q.student && q.student.trim() !== '' && q.student.trim() !== '()')
+        .reverse();
 
       function cleanCounts(obj) {
         const res = {};
@@ -681,8 +779,9 @@
         return res;
       }
 
-      const processedChannels = processChannels(raw.channels);
       const actualTotal = validQuotes.length > 0 ? validQuotes.length : (raw.total || 0);
+      const processedChannels = processChannels(raw.channels);
+      const processedDistricts = processDistricts(raw.districts, actualTotal);
       const date = raw.updatedDate && raw.updatedDate.trim() !== '' ? raw.updatedDate.trim() : '--';
       const time = cleanTime(raw.updatedTime);
 
@@ -697,7 +796,8 @@
         affiliations: cleanCounts(raw.affiliations),
         grades: cleanCounts(raw.grades),
         subdistricts: cleanCounts(raw.subdistricts),
-        districts: cleanCounts(raw.districts),
+        districts: processedDistricts.counts,
+        activeNanDistrictCount: processedDistricts.activeNanDistrictCount,
         devices: cleanCounts(raw.devices),
         quotes: validQuotes
       };
@@ -712,22 +812,23 @@
       setBadgeCount('badge-channels-count', Object.keys(DATA.channels || {}).length, 'ช่องทาง');
       setBadgeCount('badge-dates-count', Object.keys(DATA.applyDates || {}).length, 'วัน');
       setBadgeCount('badge-schools-count', Object.keys(DATA.schools || {}).length, 'โรงเรียน');
+      setBadgeCount('badge-districts-count', DATA.activeNanDistrictCount || 0, '/15 อำเภอ');
       setBadgeCount('badge-affiliations-count', Object.keys(DATA.affiliations || {}).length, 'สังกัด');
       setBadgeCount('badge-grades-count', Object.keys(DATA.grades || {}).length, 'ระดับชั้น');
-      setBadgeCount('badge-districts-count', Object.keys(DATA.districts || {}).length, 'อำเภอ');
       setBadgeCount('badge-subdistricts-count', Object.keys(DATA.subdistricts || {}).length, 'ตำบล');
       setBadgeCount('badge-devices-count', Object.keys(DATA.devices || {}).length, 'ประเภท');
-
-      // แสดงคำแนะนำเมื่อมีข้อมูลแบบ Grouping ("มีคนแนะนำ" หรือ "อื่น ๆ")
-      const hintEl = document.getElementById('channels-group-hint');
-      if (hintEl) {
-        const hasDetails = DATA.channelDetails && Object.keys(DATA.channelDetails).length > 0;
-        hintEl.classList.toggle('hidden', !hasDetails);
-      }
     }
 
-    // ฟังก์ชันกลางสร้างกราฟแท่งแบบอัจฉริยะ (ปรับ Horizontal/Vertical อัตโนมัติ + ใส่จำนวนและ %)
-    function buildSmartBarChart({ key, canvasId, containerId, dataObj, color, groupDetails = null }) {
+    // สร้างกราฟแท่งแบบอัตโนมัติพร้อม Layout สม่ำเสมอ ไม่ซ้อนทับ
+    function buildSmartBarChart({
+      key,
+      canvasId,
+      containerId,
+      dataObj,
+      color,
+      groupDetails = null,
+      forceHorizontal = false
+    }) {
       const canvas = document.getElementById(canvasId);
       const container = document.getElementById(containerId);
       if (!canvas || !container) return;
@@ -738,24 +839,32 @@
       const maxVal = Math.max(...values, 1);
 
       const { isMobile } = getDeviceContext();
-      const indexAxis = decideChartOrientation(labels, container);
+      const indexAxis = decideChartOrientation(labels, container, forceHorizontal);
       const isHorizontal = indexAxis === 'y';
 
-      // ปรับความสูงของกรอบกราฟอัตโนมัติตามจำนวนแท่งและทิศทาง
+      // กำหนดความสูงชัดเจนตามจำนวนแท่งจริง ป้องกันแท่งบีบซ้อนทับกัน
       if (isHorizontal) {
         const rowHeight = isMobile ? 34 : 36;
-        const dynamicHeight = Math.max(200, labels.length * rowHeight + 52);
+        const dynamicHeight = Math.max(190, labels.length * rowHeight + 48);
         container.style.height = `${dynamicHeight}px`;
+        container.style.minHeight = `${dynamicHeight}px`;
       } else {
-        container.style.height = isMobile ? '285px' : '325px';
+        const verticalHeight = isMobile ? 275 : 310;
+        container.style.height = `${verticalHeight}px`;
+        container.style.minHeight = `${verticalHeight}px`;
       }
 
-      // กำหนด step ของเส้นตารางให้อ่านง่ายเป็นเลขจำนวนเต็ม
       const rawStep = Math.ceil(maxVal / 5);
       const stepSize = rawStep <= 1 ? 1 : (rawStep <= 2 ? 2 : (rawStep <= 5 ? 5 : Math.ceil(rawStep / 5) * 5));
 
+      // กำหนดสีแท่ง (รองรับทั้งสีเดียว, array สี, หรือฟังก์ชันกำหนดสีรายแท่ง)
+      const bgColors = typeof color === 'function'
+        ? labels.map((lbl, idx) => color(lbl, values[idx], idx))
+        : color;
+
       const valueScaleConfig = {
         beginAtZero: true,
+        border: { color: '#e2e8f0' },
         ticks: {
           stepSize,
           precision: 0,
@@ -763,18 +872,20 @@
           color: '#64748b'
         },
         grid: { color: '#f1f5f9' },
-        suggestedMax: isHorizontal ? Math.ceil(maxVal * 1.22) : Math.ceil(maxVal * 1.18)
+        // ให้แท่งที่ยาวสุดขยายเต็มพื้นที่พอดี ไม่เหลือที่ว่างด้านขวามากเกินไป
+        suggestedMax: isHorizontal ? maxVal : Math.ceil(maxVal * 1.15)
       };
 
       const categoryScaleConfig = {
+        border: { color: '#e2e8f0' },
         ticks: {
           autoSkip: false,
+          padding: 6,
           font: { family: 'Noto Sans Thai', size: isMobile ? 11 : 12 },
           color: '#334155',
           callback: function(val) {
             const rawLabel = this.getLabelForValue(val);
             const shortLabel = shortenAxisLabel(rawLabel, isHorizontal);
-            // เติมสัญลักษณ์ ⓘ ท้ายชื่อกลุ่มที่มีรายละเอียดตารางให้กดดูได้
             if (groupDetails && groupDetails[rawLabel] && groupDetails[rawLabel].length > 0) {
               return `${shortLabel} ⓘ`;
             }
@@ -790,9 +901,11 @@
           labels,
           datasets: [{
             data: values,
-            backgroundColor: color,
+            backgroundColor: bgColors,
             borderRadius: 6,
-            maxBarThickness: isHorizontal ? (isMobile ? 22 : 24) : (isMobile ? 34 : 42)
+            borderSkipped: false,
+            barThickness: isHorizontal ? (isMobile ? 16 : 18) : undefined,
+            maxBarThickness: isHorizontal ? 20 : (isMobile ? 38 : 48)
           }]
         },
         options: {
@@ -806,10 +919,10 @@
           },
           layout: {
             padding: {
-              top: isHorizontal ? 6 : 36,
-              right: isHorizontal ? (isMobile ? 74 : 88) : 10,
-              left: 4,
-              bottom: 4
+              top: isHorizontal ? 4 : 36,
+              right: isHorizontal ? (isMobile ? 76 : 86) : 10,
+              left: 2,
+              bottom: 2
             }
           },
           scales: isHorizontal
@@ -822,10 +935,13 @@
               external: createExternalTooltipHandler(datasetTotal, groupDetails)
             },
             datalabels: {
-              color: '#1e293b',
+              color: (ctx) => {
+                const val = Number(ctx.dataset.data[ctx.dataIndex]) || 0;
+                return val === 0 ? '#94a3b8' : '#1e293b';
+              },
               anchor: 'end',
               align: 'end',
-              offset: isHorizontal ? 6 : 3,
+              offset: isHorizontal ? 6 : 4,
               clamp: false,
               clip: false,
               textAlign: isHorizontal ? 'left' : 'center',
@@ -837,7 +953,6 @@
               formatter: (value) => {
                 const count = Math.round(value);
                 const pct = formatPercent(count, datasetTotal);
-                // แนวนอนเรียงบรรทัดเดียวอ่านคล่อง / แนวตั้งขึ้น 2 บรรทัดกันทับกัน
                 return isHorizontal ? `${count} (${pct})` : `${count}\n(${pct})`;
               }
             }
@@ -878,6 +993,18 @@
       });
 
       buildSmartBarChart({
+        key: 'districts',
+        canvasId: 'chart-districts',
+        containerId: 'container-districts',
+        dataObj: DATA.districts,
+        forceHorizontal: true,
+        color: (label, val) => {
+          if (label === OUTSIDE_NAN_LABEL) return '#64748b';
+          return val > 0 ? '#f59e0b' : '#e2e8f0';
+        }
+      });
+
+      buildSmartBarChart({
         key: 'affiliations',
         canvasId: 'chart-affiliations',
         containerId: 'container-affiliations',
@@ -891,14 +1018,6 @@
         containerId: 'container-grades',
         dataObj: DATA.grades,
         color: '#ec4899'
-      });
-
-      buildSmartBarChart({
-        key: 'districts',
-        canvasId: 'chart-districts',
-        containerId: 'container-districts',
-        dataObj: DATA.districts,
-        color: '#f59e0b'
       });
 
       buildSmartBarChart({
@@ -965,7 +1084,9 @@
         const text = q[currentPart] || '';
         if (!text) return false;
         if (!searchQuery) return true;
+        const meta = parseQuoteMeta(q);
         return text.toLowerCase().includes(searchQuery) ||
+               meta.displayLine.toLowerCase().includes(searchQuery) ||
                q.student.toLowerCase().includes(searchQuery) ||
                q.school.toLowerCase().includes(searchQuery);
       });
@@ -984,6 +1105,7 @@
         card.className = 'bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 flex flex-col justify-between transition-all hover:shadow-md hover:border-emerald-300';
 
         const quoteText = q[currentPart] || '-';
+        const meta = parseQuoteMeta(q);
 
         card.innerHTML = `
           <div>
@@ -991,8 +1113,9 @@
             <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal whitespace-pre-line">${escapeHtml(quoteText)}</p>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-200/60">
-            <div class="text-xs font-semibold text-emerald-800">${escapeHtml(q.student)}</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(q.school)}</div>
+            <div class="text-xs font-semibold text-emerald-800 leading-relaxed">
+              ${escapeHtml(meta.nickname)} <span class="font-normal text-slate-500">- โรงเรียน: ${escapeHtml(meta.schoolName)}${meta.grade ? ' ' + escapeHtml(meta.grade) : ''}</span>
+            </div>
           </div>
         `;
         container.appendChild(card);
