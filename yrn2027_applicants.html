@@ -134,7 +134,7 @@
               </span>
               <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600">
                 <span id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span id="status-text">เชื่อมต่อข้อมูลสดแล้ว</span>
+                <span id="status-text">เชื่อมต่อข้อมูลแล้ว</span>
               </span>
             </div>
 
@@ -490,7 +490,7 @@
 
         applyFetchedData(json);
 
-        if (statusText) statusText.textContent = "ข้อมูลสดล่าสุด (Real-time)";
+        if (statusText) statusText.textContent = "ข้อมูลล่าสุด (Real-time)";
         if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
       } catch (err) {
         console.error("Fetch applicants failed:", err);
