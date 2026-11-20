@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard สรุปจำนวนผู้สมัคร Young รักษ์น่าน 2570</title>
+  <title>สรุปการผู้สมัคร Young รักษ์น่าน 2570</title>
   <!-- Google Fonts: Noto Sans Thai -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js & Datalabels Plugin -->
@@ -34,35 +34,54 @@
       position: relative;
       width: 100%;
     }
+    /* Custom HTML Tooltip */
+    #custom-chart-tooltip {
+      position: fixed;
+      z-index: 60;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      max-width: min(340px, calc(100vw - 24px));
+    }
+    #custom-chart-tooltip.visible {
+      opacity: 1;
+    }
+    #custom-chart-tooltip.interactive {
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 antialiased text-slate-800">
 
   <!-- Header Section -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <div>
-          <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-100 text-emerald-800">
               🌱 เพาะพันธุ์ปัญญา
             </span>
-            <span id="status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+            <span id="status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-slate-100 text-slate-600">
               <span id="status-dot" class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
               <span id="status-text">กำลังโหลดข้อมูล...</span>
             </span>
           </div>
-          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
-            Dashboard สรุปจำนวนผู้สมัคร Young รักษ์น่าน 2570
+          <!-- หัวข้อ 1 บรรทัดไม่ล้นบนมือถือ -->
+          <h1
+            class="font-bold text-slate-900 tracking-tight whitespace-nowrap leading-snug"
+            style="font-size: clamp(0.82rem, 3.6vw, 1.5rem);"
+          >
+            สรุปการผู้สมัคร Young รักษ์น่าน 2570: <span id="header-total" class="text-emerald-600 font-extrabold">--</span> คน
           </h1>
-          <p class="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-slate-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <p class="text-[11px] sm:text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-400 inline shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Updated: <strong class="text-slate-700 font-semibold" id="header-updated-date">--</strong> เวลา <strong class="text-slate-700 font-semibold" id="header-updated-time">--</strong>
           </p>
         </div>
         <!-- Refresh Button -->
-        <div class="flex items-center gap-2">
-          <button id="btn-refresh" onclick="fetchLiveData()" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-60 text-slate-700 transition">
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="btn-refresh" onclick="fetchLiveData()" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 disabled:opacity-60 text-slate-700 transition">
             <svg id="refresh-icon" class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             <span>รีเฟรชข้อมูลสด</span>
           </button>
@@ -72,170 +91,141 @@
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-
-    <!-- Top KPI Cards -->
-    <section>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        
-        <!-- Total Applicants Card -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow transition flex flex-col justify-between relative overflow-hidden sm:col-span-2">
-          <div class="absolute -right-4 -bottom-4 w-32 h-32 bg-emerald-50 rounded-full opacity-60 pointer-events-none"></div>
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-medium text-slate-500">จำนวนผู้สมัครทั้งหมด</span>
-              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
-                👥
-              </div>
-            </div>
-            <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-4xl sm:text-5xl font-extrabold text-emerald-600 tracking-tight" id="kpi-total">--</span>
-              <span class="text-slate-500 font-medium text-base">คน</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Schools Summary -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow transition flex flex-col justify-between">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-slate-500">โรงเรียนที่เข้าร่วม</span>
-            <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg">
-              🏫
-            </div>
-          </div>
-          <div class="flex items-baseline gap-2 mt-1">
-            <span class="text-4xl sm:text-5xl font-extrabold text-blue-600 tracking-tight" id="kpi-schools-count">--</span>
-            <span class="text-slate-500 font-medium text-sm">แห่ง</span>
-          </div>
-        </div>
-
-        <!-- Districts Summary -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm hover:shadow transition flex flex-col justify-between">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-medium text-slate-500">พื้นที่ภูมิลำเนา</span>
-            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg">
-              📍
-            </div>
-          </div>
-          <div class="flex items-baseline gap-2 mt-1">
-            <span class="text-4xl sm:text-5xl font-extrabold text-amber-600 tracking-tight" id="kpi-districts-count">--</span>
-            <span class="text-slate-500 font-medium text-sm">อำเภอ</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-7 space-y-6 sm:space-y-8">
 
     <!-- Charts Section -->
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900">กราฟแท่งแสดงความถี่สะสม</h2>
-          </div>
-      </div>
+    <section>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Chart 1: รู้ช่องทางการสมัครจาก (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-              <span>📢</span> รู้ช่องทางการสมัครจาก ...
-            </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700" id="badge-channels-count">-- ช่องทาง</span>
+        <!-- Chart 1: รู้ช่องทางการสมัครจาก ... -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-start justify-between gap-2 mb-1">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+                <span>📢</span> รู้ช่องทางการสมัครจาก ...
+              </h3>
+              <p id="channels-group-hint" class="hidden text-[11px] text-blue-600/90 mt-0.5">
+                💡 แตะหรือวางเมาส์บนแท่ง "มีคนแนะนำ" / "อื่น ๆ" เพื่อดูรายละเอียด
+              </p>
+            </div>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 shrink-0" id="badge-channels-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">ช่องทาง</span>
+            </span>
           </div>
-          <div class="chart-container flex-1 min-h-[340px]">
+          <div class="chart-container flex-1 mt-3" id="container-channels">
             <canvas id="chart-channels"></canvas>
           </div>
         </div>
 
-        <!-- Chart 2: วันที่สมัคร (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 2: วันที่สมัคร -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>📅</span> วันที่สมัคร
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700" id="badge-dates-count">-- วัน</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-purple-50 text-purple-700 border border-purple-100 shrink-0" id="badge-dates-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">วัน</span>
+            </span>
           </div>
-          <div class="chart-container flex-1 min-h-[340px]">
+          <div class="chart-container flex-1" id="container-dates">
             <canvas id="chart-dates"></canvas>
           </div>
         </div>
 
-        <!-- Chart 3: โรงเรียน (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 3: โรงเรียน -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🏫</span> โรงเรียน
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700" id="badge-schools-count">-- โรงเรียน</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 shrink-0" id="badge-schools-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">โรงเรียน</span>
+            </span>
           </div>
-          <div class="chart-container flex-1 min-h-[400px]">
+          <div class="chart-container flex-1" id="container-schools">
             <canvas id="chart-schools"></canvas>
           </div>
         </div>
 
-        <!-- Chart 4: สังกัดของโรงเรียน (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 4: สังกัดของโรงเรียน -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🏛️</span> สังกัดของโรงเรียน
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700" id="badge-affiliations-count">-- สังกัด</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 shrink-0" id="badge-affiliations-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">สังกัด</span>
+            </span>
           </div>
-          <div class="chart-container flex-1 min-h-[400px]">
+          <div class="chart-container flex-1" id="container-affiliations">
             <canvas id="chart-affiliations"></canvas>
           </div>
         </div>
 
-        <!-- Chart 5: ระดับชั้น (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 5: ระดับชั้น -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🎓</span> ระดับชั้น
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-violet-50 text-violet-700">ชั้นเรียน</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-pink-50 text-pink-700 border border-pink-100 shrink-0" id="badge-grades-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">ระดับชั้น</span>
+            </span>
           </div>
-          <div class="chart-container flex-1 min-h-[340px]">
+          <div class="chart-container flex-1" id="container-grades">
             <canvas id="chart-grades"></canvas>
           </div>
         </div>
 
-        <!-- Chart 6: อำเภอที่อาศัย (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 6: อำเภอที่อาศัย -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>📍</span> อำเภอที่อาศัย
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700" id="badge-districts-count">-- อำเภอ</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-amber-50 text-amber-700 border border-amber-100 shrink-0" id="badge-districts-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">อำเภอ</span>
+            </span>
           </div>
-          <div class="chart-container flex-1 min-h-[340px]">
+          <div class="chart-container flex-1" id="container-districts">
             <canvas id="chart-districts"></canvas>
           </div>
         </div>
 
-        <!-- Chart 7: ตำบลที่อาศัย (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 7: ตำบลที่อาศัย -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>🏡</span> ตำบลที่อาศัย
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700" id="badge-subdistricts-count">-- ตำบล</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-cyan-50 text-cyan-700 border border-cyan-100 shrink-0" id="badge-subdistricts-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">ตำบล</span>
+            </span>
           </div>
-          <div class="chart-container min-h-[520px]">
+          <div class="chart-container" id="container-subdistricts">
             <canvas id="chart-subdistricts"></canvas>
           </div>
         </div>
 
-        <!-- Chart 8: อุปกรณ์ที่ใช้สมัคร (ความถี่สะสม) -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+        <!-- Chart 8: อุปกรณ์ที่ใช้สมัคร -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-sm flex flex-col lg:col-span-2">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
               <span>📱</span> อุปกรณ์ที่ใช้สมัคร
             </h3>
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">อุปกรณ์ระบบ</span>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 shrink-0" id="badge-devices-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">ประเภท</span>
+            </span>
           </div>
-          <div class="chart-container min-h-[220px]">
+          <div class="chart-container" id="container-devices">
             <canvas id="chart-devices"></canvas>
           </div>
         </div>
@@ -244,11 +234,11 @@
     </section>
 
     <!-- Applicant Voices Section -->
-    <section class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-sm space-y-6">
+    <section class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-7 shadow-sm space-y-5 sm:space-y-6">
       
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-4 sm:pb-5">
         <div>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+          <h2 class="text-base sm:text-xl font-bold text-slate-900 flex items-center gap-2">
             <span>💬</span> ข้อความจากผู้สมัคร
           </h2>
           <p class="text-xs sm:text-sm text-slate-500 mt-1">
@@ -295,7 +285,7 @@
       <!-- Section Indicator Banner -->
       <div class="bg-emerald-50/70 border border-emerald-100 rounded-xl px-4 py-3 flex items-center justify-between text-xs sm:text-sm text-emerald-900 font-medium">
         <span id="current-question-title">กำลังแสดง: 1. ทำไมถึงอยากสมัคร Young รักษ์น่าน</span>
-        <span id="current-quotes-count" class="text-xs bg-emerald-200/80 text-emerald-800 px-2.5 py-0.5 rounded-full font-semibold">-- ข้อความ</span>
+        <span id="current-quotes-count" class="text-xs sm:text-sm bg-emerald-200/80 text-emerald-900 px-2.5 py-0.5 rounded-full font-bold">-- ข้อความ</span>
       </div>
 
       <!-- Quotes Cards Container -->
@@ -320,6 +310,9 @@
     </div>
   </footer>
 
+  <!-- Custom External HTML Tooltip (รองรับตารางรายละเอียด & การแตะบนมือถือ) -->
+  <div id="custom-chart-tooltip" class="bg-slate-900/95 text-white rounded-xl shadow-xl border border-slate-700/80 p-3 text-xs backdrop-blur-sm"></div>
+
   <!-- Script & Realtime Fetch -->
   <script>
     // ========================================================
@@ -332,20 +325,237 @@
     let currentPart = 'why';
     let searchQuery = '';
     let chartInstances = {};
+    let lastViewportWidth = window.innerWidth;
+    let lastIsPortrait = window.innerHeight > window.innerWidth;
+    let resizeTimer = null;
 
     Chart.register(ChartDataLabels);
 
-    // ฟังก์ชันตัดข้อความวันเดือนปีส่วนเกิน ให้เหลือเฉพาะเวลา เช่น 14:59:54
     function cleanTime(t) {
       if (!t || t === '--') return '--';
       const m = t.toString().match(/\b(\d{1,2}:\d{2}(?::\d{2})?)\b/);
       return m ? m[1] : t.toString().trim();
     }
 
-    // Helper ป้องกัน Error กรณีไม่พบ Element ID ในหน้า HTML
     function setText(id, value) {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
+    }
+
+    function setBadgeCount(id, count, unit) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = `
+        <span class="text-lg sm:text-xl font-extrabold leading-none">${count}</span>
+        <span class="text-xs sm:text-sm font-semibold">${escapeHtml(unit)}</span>
+      `;
+    }
+
+    function formatPercent(value, total) {
+      if (!total || total <= 0) return '0.0%';
+      return `${((value / total) * 100).toFixed(1)}%`;
+    }
+
+    // ตรวจสอบข้อมูลอุปกรณ์และหน้าจอปัจจุบัน
+    function getDeviceContext() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isPortrait = h > w;
+      const isTouch = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window);
+      const isMobile = w < 640;
+      const isTablet = w >= 640 && w < 1024;
+      return { w, h, isPortrait, isTouch, isMobile, isTablet };
+    }
+
+    // ระบบตัดสินใจอัตโนมัติว่ากราฟควรแสดง Horizontal หรือ Vertical เพื่อให้อ่านชัดที่สุด
+    function decideChartOrientation(labels, containerEl) {
+      const { isPortrait, isMobile, isTablet } = getDeviceContext();
+      const itemCount = labels.length;
+      if (itemCount === 0) return 'y';
+
+      const maxLabelLen = Math.max(...labels.map(l => String(l).length), 0);
+      const containerWidth = (containerEl && containerEl.clientWidth) ? containerEl.clientWidth : (window.innerWidth - 48);
+
+      // 1. ถ้าชื่อแกนยาวเกินกว่าจะวางแนวตั้งแล้วอ่านง่าย ให้ใช้ Horizontal
+      const maxReadableVerticalLabel = isMobile ? 10 : (isTablet ? 13 : 16);
+      if (maxLabelLen > maxReadableVerticalLabel) {
+        return 'y';
+      }
+
+      // 2. คำนวณความกว้างที่ต้องการต่อ 1 แท่งแนวตั้ง (รองรับทั้งป้ายแกน X และตัวเลข+เปอร์เซ็นต์บนหัวแท่ง)
+      const plotWidth = Math.max(containerWidth - 52, 200);
+      const minSlotPerBar = Math.max(
+        isMobile ? 58 : 74,
+        Math.min(maxLabelLen, 14) * (isMobile ? 6.8 : 7.8) + 14
+      );
+      const maxVerticalBarsFit = Math.floor(plotWidth / minSlotPerBar);
+
+      // 3. จำกัดจำนวนแท่งสูงสุดสำหรับแนวตั้งตามชนิดอุปกรณ์และแนวหน้าจอ
+      let hardVerticalCap = 12;
+      if (isMobile && isPortrait) hardVerticalCap = 5;
+      else if (isMobile && !isPortrait) hardVerticalCap = 8;
+      else if (isTablet && isPortrait) hardVerticalCap = 8;
+      else if (isTablet && !isPortrait) hardVerticalCap = 10;
+
+      if (itemCount > maxVerticalBarsFit || itemCount > hardVerticalCap) {
+        return 'y'; // Horizontal
+      }
+
+      return 'x'; // Vertical
+    }
+
+    // ย่อข้อความบนแกนเมื่อหน้าจอแคบมาก เพื่อให้พื้นที่แท่งกราฟยังกว้างชัดเจน (ชื่อเต็มดูได้ใน Tooltip)
+    function shortenAxisLabel(label, isHorizontal) {
+      const { isMobile } = getDeviceContext();
+      const str = String(label || '');
+      const limit = isHorizontal ? (isMobile ? 18 : 34) : (isMobile ? 10 : 16);
+      return str.length > limit ? str.slice(0, limit - 1) + '…' : str;
+    }
+
+    // จัดกลุ่มช่องทางการสมัคร ("มีคนแนะนำ โปรดระบุ: ..." -> "มีคนแนะนำ", "อื่น ๆ โปรดระบุ: ..." -> "อื่น ๆ")
+    function processChannels(rawChannels) {
+      const groupedCounts = {};
+      const groupedDetails = {};
+
+      for (const [rawKey, rawVal] of Object.entries(rawChannels || {})) {
+        const key = (rawKey || '').trim();
+        const val = Number(rawVal) || 0;
+        if (!key || key === 'ไม่ต้องระบุ' || val <= 0) continue;
+
+        let groupName = key;
+        let subDetail = null;
+
+        const recMatch = key.match(/^มีคนแนะนำ(?:\s*\(?โปรดระบุ\)?)?\s*[:：\-]?\s*(.*)$/i);
+        const otherMatch = key.match(/^อื่น\s*ๆ(?:\s*\(?โปรดระบุ\)?)?\s*[:：\-]?\s*(.*)$/i);
+
+        if (recMatch) {
+          groupName = 'มีคนแนะนำ';
+          subDetail = (recMatch[1] || '').trim() || '(ไม่ระบุรายละเอียด)';
+        } else if (otherMatch) {
+          groupName = 'อื่น ๆ';
+          subDetail = (otherMatch[1] || '').trim() || '(ไม่ระบุรายละเอียด)';
+        }
+
+        groupedCounts[groupName] = (groupedCounts[groupName] || 0) + val;
+
+        if (subDetail !== null) {
+          if (!groupedDetails[groupName]) groupedDetails[groupName] = {};
+          groupedDetails[groupName][subDetail] = (groupedDetails[groupName][subDetail] || 0) + val;
+        }
+      }
+
+      const sortedCounts = {};
+      Object.keys(groupedCounts)
+        .sort((a, b) => groupedCounts[b] - groupedCounts[a])
+        .forEach(k => { sortedCounts[k] = groupedCounts[k]; });
+
+      const sortedDetails = {};
+      for (const [gKey, detailsObj] of Object.entries(groupedDetails)) {
+        sortedDetails[gKey] = Object.entries(detailsObj)
+          .sort((a, b) => b[1] - a[1])
+          .map(([text, count]) => ({ text, count }));
+      }
+
+      return { counts: sortedCounts, details: sortedDetails };
+    }
+
+    // ซ่อน Custom Tooltip
+    function hideCustomTooltip() {
+      const tipEl = document.getElementById('custom-chart-tooltip');
+      if (tipEl) {
+        tipEl.classList.remove('visible', 'interactive');
+      }
+    }
+
+    // สร้าง External HTML Tooltip รองรับทั้งกราฟปกติและตารางรายละเอียดของ Grouping
+    function createExternalTooltipHandler(datasetTotal, groupDetailsMap = null) {
+      return function(context) {
+        const { chart, tooltip } = context;
+        const tipEl = document.getElementById('custom-chart-tooltip');
+        if (!tipEl) return;
+
+        if (tooltip.opacity === 0 || !tooltip.dataPoints || tooltip.dataPoints.length === 0) {
+          hideCustomTooltip();
+          return;
+        }
+
+        const dp = tooltip.dataPoints[0];
+        const fullLabel = chart.data.labels[dp.dataIndex] || '';
+        const value = Number(dp.raw) || 0;
+        const pct = formatPercent(value, datasetTotal);
+        const subItems = groupDetailsMap ? groupDetailsMap[fullLabel] : null;
+        const { isTouch } = getDeviceContext();
+
+        if (subItems && subItems.length > 0) {
+          const rowsHtml = subItems.map(item => `
+            <tr class="border-t border-slate-700/70">
+              <td class="py-1.5 pr-3 text-slate-200 align-top break-words">${escapeHtml(item.text)}</td>
+              <td class="py-1.5 text-right font-semibold text-emerald-300 whitespace-nowrap align-top">${item.count} คน</td>
+            </tr>
+          `).join('');
+
+          tipEl.innerHTML = `
+            <div class="flex items-start justify-between gap-2 pb-2 border-b border-slate-700">
+              <div>
+                <div class="font-bold text-sm text-white">${escapeHtml(fullLabel)}</div>
+                <div class="text-[11px] text-slate-300">รวมทั้งหมด <span class="text-emerald-400 font-bold">${value} คน</span> (${pct})</div>
+              </div>
+              ${isTouch ? `<button type="button" onclick="hideCustomTooltip()" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded bg-slate-800 text-xs leading-none">✕</button>` : ''}
+            </div>
+            <div class="mt-1.5 max-h-52 overflow-y-auto">
+              <table class="w-full text-left border-collapse text-[11px]">
+                <thead>
+                  <tr class="text-slate-400">
+                    <th class="pb-1 pr-3 font-medium">รายละเอียดที่ระบุ</th>
+                    <th class="pb-1 text-right font-medium whitespace-nowrap">จำนวน</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+                <tfoot>
+                  <tr class="border-t border-slate-600 font-bold text-white">
+                    <td class="pt-1.5 pr-3">รวม</td>
+                    <td class="pt-1.5 text-right text-emerald-400 whitespace-nowrap">${value} คน</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          `;
+          if (isTouch) tipEl.classList.add('interactive');
+          else tipEl.classList.remove('interactive');
+        } else {
+          tipEl.innerHTML = `
+            <div class="font-bold text-white leading-snug mb-1">${escapeHtml(fullLabel)}</div>
+            <div class="flex items-center justify-between gap-4 text-slate-200">
+              <span>จำนวนผู้สมัคร</span>
+              <span class="font-bold text-emerald-400 whitespace-nowrap">${value} คน (${pct})</span>
+            </div>
+          `;
+          tipEl.classList.remove('interactive');
+        }
+
+        // คำนวณตำแหน่งให้อยู่ภายในกรอบหน้าจอเสมอ (ไม่หลุดขอบมือถือ)
+        tipEl.classList.add('visible');
+        const canvasRect = chart.canvas.getBoundingClientRect();
+        const tipWidth = tipEl.offsetWidth;
+        const tipHeight = tipEl.offsetHeight;
+
+        const caretX = canvasRect.left + tooltip.caretX;
+        const caretY = canvasRect.top + tooltip.caretY;
+
+        let left = caretX - tipWidth / 2;
+        left = Math.max(12, Math.min(left, window.innerWidth - tipWidth - 12));
+
+        let top = caretY - tipHeight - 14;
+        if (top < 12) {
+          top = caretY + 14;
+        }
+        top = Math.max(12, Math.min(top, window.innerHeight - tipHeight - 12));
+
+        tipEl.style.left = `${Math.round(left)}px`;
+        tipEl.style.top = `${Math.round(top)}px`;
+      };
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -357,7 +567,38 @@
         });
       }
 
-      // ดึงข้อมูลสดจาก Google Apps Script ทันทีเมื่อเปิดหน้าเว็บ
+      // แตะพื้นที่ว่างนอกกราฟเพื่อปิด Tooltip บนมือถือ
+      document.addEventListener('pointerdown', (e) => {
+        const tipEl = document.getElementById('custom-chart-tooltip');
+        if (!e.target.closest('canvas') && !(tipEl && tipEl.contains(e.target))) {
+          hideCustomTooltip();
+        }
+      });
+
+      // ปรับการจัดวางกราฟอัตโนมัติเมื่อเปลี่ยนขนาดหน้าจอหรือหมุนอุปกรณ์
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const newWidth = window.innerWidth;
+          const newIsPortrait = window.innerHeight > window.innerWidth;
+          if (Math.abs(newWidth - lastViewportWidth) > 15 || newIsPortrait !== lastIsPortrait) {
+            lastViewportWidth = newWidth;
+            lastIsPortrait = newIsPortrait;
+            hideCustomTooltip();
+            if (DATA) renderCharts();
+          }
+        }, 200);
+      });
+
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          lastViewportWidth = window.innerWidth;
+          lastIsPortrait = window.innerHeight > window.innerWidth;
+          hideCustomTooltip();
+          if (DATA) renderCharts();
+        }, 250);
+      });
+
       fetchLiveData();
     });
 
@@ -383,7 +624,6 @@
       }
 
       try {
-        // เพิ่ม timestamp ป้องกัน Browser cache ข้อมูลเก่า
         const response = await fetch(`${API_URL}?t=${Date.now()}`, {
           method: 'GET',
           redirect: 'follow'
@@ -394,7 +634,7 @@
         if (json.error) throw new Error(json.error);
 
         DATA = sanitizeData(json);
-        renderKPIs();
+        renderHeaderAndBadges();
         renderCharts();
         renderQuotes();
 
@@ -422,7 +662,7 @@
       }
     }
 
-    // กรองและทำความสะอาดข้อมูล ป้องกันการนับแถวว่าง
+    // กรองทำความสะอาดข้อมูลและจัดกลุ่มช่องทาง
     function sanitizeData(raw) {
       if (!raw) return null;
 
@@ -435,12 +675,13 @@
         for (const [k, v] of Object.entries(obj || {})) {
           const key = k ? k.trim() : '';
           if (key !== '' && key !== 'ไม่ต้องระบุ' && v > 0) {
-            res[key] = v;
+            res[key] = Number(v);
           }
         }
         return res;
       }
 
+      const processedChannels = processChannels(raw.channels);
       const actualTotal = validQuotes.length > 0 ? validQuotes.length : (raw.total || 0);
       const date = raw.updatedDate && raw.updatedDate.trim() !== '' ? raw.updatedDate.trim() : '--';
       const time = cleanTime(raw.updatedTime);
@@ -449,7 +690,8 @@
         updatedDate: date,
         updatedTime: time,
         total: actualTotal,
-        channels: cleanCounts(raw.channels),
+        channels: processedChannels.counts,
+        channelDetails: processedChannels.details,
         applyDates: cleanCounts(raw.applyDates),
         schools: cleanCounts(raw.schools),
         affiliations: cleanCounts(raw.affiliations),
@@ -461,306 +703,218 @@
       };
     }
 
-    function renderKPIs() {
+    function renderHeaderAndBadges() {
       if (!DATA) return;
+      setText('header-total', DATA.total || 0);
       setText('header-updated-date', DATA.updatedDate || '--');
       setText('header-updated-time', cleanTime(DATA.updatedTime) || '--');
-      setText('kpi-total', DATA.total || 0);
 
-      setText('kpi-schools-count', Object.keys(DATA.schools || {}).length);
-      setText('kpi-districts-count', Object.keys(DATA.districts || {}).length);
-      setText('kpi-subdistricts-count', Object.keys(DATA.subdistricts || {}).length);
+      setBadgeCount('badge-channels-count', Object.keys(DATA.channels || {}).length, 'ช่องทาง');
+      setBadgeCount('badge-dates-count', Object.keys(DATA.applyDates || {}).length, 'วัน');
+      setBadgeCount('badge-schools-count', Object.keys(DATA.schools || {}).length, 'โรงเรียน');
+      setBadgeCount('badge-affiliations-count', Object.keys(DATA.affiliations || {}).length, 'สังกัด');
+      setBadgeCount('badge-grades-count', Object.keys(DATA.grades || {}).length, 'ระดับชั้น');
+      setBadgeCount('badge-districts-count', Object.keys(DATA.districts || {}).length, 'อำเภอ');
+      setBadgeCount('badge-subdistricts-count', Object.keys(DATA.subdistricts || {}).length, 'ตำบล');
+      setBadgeCount('badge-devices-count', Object.keys(DATA.devices || {}).length, 'ประเภท');
 
-      setText('badge-channels-count', `${Object.keys(DATA.channels || {}).length} ช่องทาง`);
-      setText('badge-dates-count', `${Object.keys(DATA.applyDates || {}).length} วัน`);
-      setText('badge-schools-count', `${Object.keys(DATA.schools || {}).length} โรงเรียน`);
-      setText('badge-affiliations-count', `${Object.keys(DATA.affiliations || {}).length} สังกัด`);
-      setText('badge-districts-count', `${Object.keys(DATA.districts || {}).length} อำเภอ`);
-      setText('badge-subdistricts-count', `${Object.keys(DATA.subdistricts || {}).length} ตำบล`);
+      // แสดงคำแนะนำเมื่อมีข้อมูลแบบ Grouping ("มีคนแนะนำ" หรือ "อื่น ๆ")
+      const hintEl = document.getElementById('channels-group-hint');
+      if (hintEl) {
+        const hasDetails = DATA.channelDetails && Object.keys(DATA.channelDetails).length > 0;
+        hintEl.classList.toggle('hidden', !hasDetails);
+      }
     }
 
-    const baseChartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1e293b',
-          titleFont: { family: 'Noto Sans Thai', size: 13 },
-          bodyFont: { family: 'Noto Sans Thai', size: 12 },
-          callbacks: {
-            label: (ctx) => ` จำนวน: ${ctx.raw} คน`
+    // ฟังก์ชันกลางสร้างกราฟแท่งแบบอัจฉริยะ (ปรับ Horizontal/Vertical อัตโนมัติ + ใส่จำนวนและ %)
+    function buildSmartBarChart({ key, canvasId, containerId, dataObj, color, groupDetails = null }) {
+      const canvas = document.getElementById(canvasId);
+      const container = document.getElementById(containerId);
+      if (!canvas || !container) return;
+
+      const labels = Object.keys(dataObj || {});
+      const values = Object.values(dataObj || {});
+      const datasetTotal = values.reduce((sum, v) => sum + v, 0);
+      const maxVal = Math.max(...values, 1);
+
+      const { isMobile } = getDeviceContext();
+      const indexAxis = decideChartOrientation(labels, container);
+      const isHorizontal = indexAxis === 'y';
+
+      // ปรับความสูงของกรอบกราฟอัตโนมัติตามจำนวนแท่งและทิศทาง
+      if (isHorizontal) {
+        const rowHeight = isMobile ? 34 : 36;
+        const dynamicHeight = Math.max(200, labels.length * rowHeight + 52);
+        container.style.height = `${dynamicHeight}px`;
+      } else {
+        container.style.height = isMobile ? '285px' : '325px';
+      }
+
+      // กำหนด step ของเส้นตารางให้อ่านง่ายเป็นเลขจำนวนเต็ม
+      const rawStep = Math.ceil(maxVal / 5);
+      const stepSize = rawStep <= 1 ? 1 : (rawStep <= 2 ? 2 : (rawStep <= 5 ? 5 : Math.ceil(rawStep / 5) * 5));
+
+      const valueScaleConfig = {
+        beginAtZero: true,
+        ticks: {
+          stepSize,
+          precision: 0,
+          font: { family: 'Noto Sans Thai', size: isMobile ? 10 : 11 },
+          color: '#64748b'
+        },
+        grid: { color: '#f1f5f9' },
+        suggestedMax: isHorizontal ? Math.ceil(maxVal * 1.22) : Math.ceil(maxVal * 1.18)
+      };
+
+      const categoryScaleConfig = {
+        ticks: {
+          autoSkip: false,
+          font: { family: 'Noto Sans Thai', size: isMobile ? 11 : 12 },
+          color: '#334155',
+          callback: function(val) {
+            const rawLabel = this.getLabelForValue(val);
+            const shortLabel = shortenAxisLabel(rawLabel, isHorizontal);
+            // เติมสัญลักษณ์ ⓘ ท้ายชื่อกลุ่มที่มีรายละเอียดตารางให้กดดูได้
+            if (groupDetails && groupDetails[rawLabel] && groupDetails[rawLabel].length > 0) {
+              return `${shortLabel} ⓘ`;
+            }
+            return shortLabel;
           }
         },
-        datalabels: {
-          color: '#1e293b',
-          anchor: 'end',
-          align: 'end',
-          offset: 4,
-          font: { family: 'Noto Sans Thai', weight: 'bold', size: 11 },
-          formatter: (value) => Math.round(value)
+        grid: { display: false }
+      };
+
+      chartInstances[key] = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: color,
+            borderRadius: 6,
+            maxBarThickness: isHorizontal ? (isMobile ? 22 : 24) : (isMobile ? 34 : 42)
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis,
+          interaction: {
+            mode: 'nearest',
+            axis: isHorizontal ? 'y' : 'x',
+            intersect: false
+          },
+          layout: {
+            padding: {
+              top: isHorizontal ? 6 : 36,
+              right: isHorizontal ? (isMobile ? 74 : 88) : 10,
+              left: 4,
+              bottom: 4
+            }
+          },
+          scales: isHorizontal
+            ? { x: valueScaleConfig, y: categoryScaleConfig }
+            : { x: categoryScaleConfig, y: valueScaleConfig },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: false,
+              external: createExternalTooltipHandler(datasetTotal, groupDetails)
+            },
+            datalabels: {
+              color: '#1e293b',
+              anchor: 'end',
+              align: 'end',
+              offset: isHorizontal ? 6 : 3,
+              clamp: false,
+              clip: false,
+              textAlign: isHorizontal ? 'left' : 'center',
+              font: {
+                family: 'Noto Sans Thai',
+                weight: 'bold',
+                size: isMobile ? 10 : 11
+              },
+              formatter: (value) => {
+                const count = Math.round(value);
+                const pct = formatPercent(count, datasetTotal);
+                // แนวนอนเรียงบรรทัดเดียวอ่านคล่อง / แนวตั้งขึ้น 2 บรรทัดกันทับกัน
+                return isHorizontal ? `${count} (${pct})` : `${count}\n(${pct})`;
+              }
+            }
+          }
         }
-      }
-    };
+      });
+    }
 
     function renderCharts() {
       if (!DATA) return;
 
-      // ทำลาย Chart เดิมก่อนวาดใหม่เมื่อกดรีเฟรช
       Object.values(chartInstances).forEach(c => c && c.destroy());
       chartInstances = {};
 
-      // 1. Chart ช่องทางการสมัคร (Horizontal Bar)
-      const chLabels = Object.keys(DATA.channels || {});
-      const chValues = Object.values(DATA.channels || {});
-      chartInstances.channels = new Chart(document.getElementById('chart-channels'), {
-        type: 'bar',
-        data: {
-          labels: chLabels,
-          datasets: [{
-            data: chValues,
-            backgroundColor: '#3b82f6',
-            borderRadius: 6,
-            barThickness: 18
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              beginAtZero: true,
-              ticks: { stepSize: 5, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...chValues, 0) + 5
-            },
-            y: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'channels',
+        canvasId: 'chart-channels',
+        containerId: 'container-channels',
+        dataObj: DATA.channels,
+        color: '#3b82f6',
+        groupDetails: DATA.channelDetails
       });
 
-      // 2. Chart วันที่สมัคร (Vertical Bar)
-      const dtLabels = Object.keys(DATA.applyDates || {});
-      const dtValues = Object.values(DATA.applyDates || {});
-      chartInstances.dates = new Chart(document.getElementById('chart-dates'), {
-        type: 'bar',
-        data: {
-          labels: dtLabels,
-          datasets: [{
-            data: dtValues,
-            backgroundColor: '#8b5cf6',
-            borderRadius: 6,
-            maxBarThickness: 42
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { stepSize: 5, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...dtValues, 0) + 5
-            },
-            x: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 12 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'dates',
+        canvasId: 'chart-dates',
+        containerId: 'container-dates',
+        dataObj: DATA.applyDates,
+        color: '#8b5cf6'
       });
 
-      // 3. Schools (Horizontal Bar)
-      const schoolLabels = Object.keys(DATA.schools || {});
-      const schoolValues = Object.values(DATA.schools || {});
-      chartInstances.schools = new Chart(document.getElementById('chart-schools'), {
-        type: 'bar',
-        data: {
-          labels: schoolLabels,
-          datasets: [{
-            data: schoolValues,
-            backgroundColor: '#10b981',
-            borderRadius: 6,
-            barThickness: 15
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              beginAtZero: true,
-              ticks: { stepSize: 2, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...schoolValues, 0) + 2
-            },
-            y: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'schools',
+        canvasId: 'chart-schools',
+        containerId: 'container-schools',
+        dataObj: DATA.schools,
+        color: '#10b981'
       });
 
-      // 4. Affiliations (Horizontal Bar)
-      const affilLabels = Object.keys(DATA.affiliations || {});
-      const affilValues = Object.values(DATA.affiliations || {});
-      chartInstances.affiliations = new Chart(document.getElementById('chart-affiliations'), {
-        type: 'bar',
-        data: {
-          labels: affilLabels,
-          datasets: [{
-            data: affilValues,
-            backgroundColor: '#6366f1',
-            borderRadius: 6,
-            barThickness: 22
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              beginAtZero: true,
-              ticks: { stepSize: 5, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...affilValues, 0) + 5
-            },
-            y: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 12 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'affiliations',
+        canvasId: 'chart-affiliations',
+        containerId: 'container-affiliations',
+        dataObj: DATA.affiliations,
+        color: '#6366f1'
       });
 
-      // 5. Grades (Vertical Bar)
-      const gradeLabels = Object.keys(DATA.grades || {});
-      const gradeValues = Object.values(DATA.grades || {});
-      chartInstances.grades = new Chart(document.getElementById('chart-grades'), {
-        type: 'bar',
-        data: {
-          labels: gradeLabels,
-          datasets: [{
-            data: gradeValues,
-            backgroundColor: '#ec4899',
-            borderRadius: 6,
-            maxBarThickness: 32
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { stepSize: 2, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...gradeValues, 0) + 3
-            },
-            x: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'grades',
+        canvasId: 'chart-grades',
+        containerId: 'container-grades',
+        dataObj: DATA.grades,
+        color: '#ec4899'
       });
 
-      // 6. Districts (Vertical Bar)
-      const distLabels = Object.keys(DATA.districts || {});
-      const distValues = Object.values(DATA.districts || {});
-      chartInstances.districts = new Chart(document.getElementById('chart-districts'), {
-        type: 'bar',
-        data: {
-          labels: distLabels,
-          datasets: [{
-            data: distValues,
-            backgroundColor: '#f59e0b',
-            borderRadius: 6,
-            maxBarThickness: 32
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { stepSize: 2, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...distValues, 0) + 3
-            },
-            x: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'districts',
+        canvasId: 'chart-districts',
+        containerId: 'container-districts',
+        dataObj: DATA.districts,
+        color: '#f59e0b'
       });
 
-      // 7. Subdistricts (Horizontal Bar)
-      const subLabels = Object.keys(DATA.subdistricts || {});
-      const subValues = Object.values(DATA.subdistricts || {});
-      chartInstances.subdistricts = new Chart(document.getElementById('chart-subdistricts'), {
-        type: 'bar',
-        data: {
-          labels: subLabels,
-          datasets: [{
-            data: subValues,
-            backgroundColor: '#06b6d4',
-            borderRadius: 5,
-            barThickness: 13
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              beginAtZero: true,
-              ticks: { stepSize: 1, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...subValues, 0) + 1
-            },
-            y: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'subdistricts',
+        canvasId: 'chart-subdistricts',
+        containerId: 'container-subdistricts',
+        dataObj: DATA.subdistricts,
+        color: '#06b6d4'
       });
 
-      // 8. Devices (Horizontal Bar)
-      const devLabels = Object.keys(DATA.devices || {});
-      const devValues = Object.values(DATA.devices || {});
-      chartInstances.devices = new Chart(document.getElementById('chart-devices'), {
-        type: 'bar',
-        data: {
-          labels: devLabels,
-          datasets: [{
-            data: devValues,
-            backgroundColor: ['#10b981', '#3b82f6', '#f43f5e'],
-            borderRadius: 6,
-            barThickness: 24
-          }]
-        },
-        options: {
-          ...baseChartOptions,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              beginAtZero: true,
-              ticks: { stepSize: 5, font: { family: 'Noto Sans Thai' } },
-              grid: { color: '#f1f5f9' },
-              suggestedMax: Math.max(...devValues, 0) + 5
-            },
-            y: {
-              ticks: { font: { family: 'Noto Sans Thai', size: 12 } },
-              grid: { display: false }
-            }
-          }
-        }
+      buildSmartBarChart({
+        key: 'devices',
+        canvasId: 'chart-devices',
+        containerId: 'container-devices',
+        dataObj: DATA.devices,
+        color: ['#10b981', '#3b82f6', '#f43f5e', '#f59e0b', '#8b5cf6']
       });
     }
 
