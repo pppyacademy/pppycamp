@@ -457,6 +457,42 @@
       return str.length > limit ? str.slice(0, limit - 1) + '…' : str;
     }
 
+    // แปลงวันที่รูปแบบ dd-mm-yyyy (หรือ dd/mm/yyyy) เป็น yyyy-mm-dd เพื่อใช้เรียงลำดับจากเก่าไปใหม่
+    function toSortableDateKey(dateStr) {
+      const str = String(dateStr || '').trim();
+      const match = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+      if (match) {
+        const dd = match[1].padStart(2, '0');
+        const mm = match[2].padStart(2, '0');
+        const yyyy = match[3];
+        return `${yyyy}-${mm}-${dd}`;
+      }
+      return str;
+    }
+
+    // จัดเรียงวันที่สมัครจากเก่าไปใหม่ (ใช้ logic yyyy-mm-dd แต่คงการแสดงผล dd-mm-yyyy ตามเดิม)
+    function processApplyDates(rawDates) {
+      const cleaned = {};
+      for (const [k, v] of Object.entries(rawDates || {})) {
+        const key = k ? k.trim() : '';
+        const val = Number(v) || 0;
+        if (key !== '' && key !== 'ไม่ต้องระบุ' && val > 0) {
+          cleaned[key] = val;
+        }
+      }
+
+      const sorted = {};
+      Object.keys(cleaned)
+        .sort((a, b) => {
+          const ka = toSortableDateKey(a);
+          const kb = toSortableDateKey(b);
+          return ka < kb ? -1 : (ka > kb ? 1 : 0);
+        })
+        .forEach(k => { sorted[k] = cleaned[k]; });
+
+      return sorted;
+    }
+
     // จัดกลุ่มช่องทางการสมัคร ("มีคนแนะนำ โปรดระบุ: ..." -> "มีคนแนะนำ", "อื่น ๆ โปรดระบุ: ..." -> "อื่น ๆ")
     function processChannels(rawChannels) {
       const groupedCounts = {};
@@ -807,7 +843,7 @@
         total: actualTotal,
         channels: processedChannels.counts,
         channelDetails: processedChannels.details,
-        applyDates: cleanCounts(raw.applyDates),
+        applyDates: processApplyDates(raw.applyDates),
         camps: cleanCounts(raw.camps),
         schools: cleanCounts(raw.schools),
         affiliations: cleanCounts(raw.affiliations),
@@ -1059,6 +1095,7 @@
         canvasId: 'chart-devices',
         containerId: 'container-devices',
         dataObj: DATA.devices,
+        forceHorizontal: true,
         color: ['#10b981', '#3b82f6', '#f43f5e', '#f59e0b', '#8b5cf6']
       });
     }
