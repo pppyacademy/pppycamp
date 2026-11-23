@@ -145,7 +145,23 @@
           </div>
         </div>
 
-        <!-- Chart 3: โรงเรียน -->
+        <!-- Chart 3: แคมป์ที่เคยเข้า -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col lg:col-span-2">
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>🏕️</span> แคมป์ที่เคยเข้า
+            </h3>
+            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-orange-50 text-orange-700 border border-orange-100 shrink-0" id="badge-camps-count">
+              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
+              <span class="text-xs sm:text-sm font-semibold">แคมป์</span>
+            </span>
+          </div>
+          <div class="chart-container shrink-0" id="container-camps">
+            <canvas id="chart-camps"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: โรงเรียน -->
         <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
@@ -161,7 +177,7 @@
           </div>
         </div>
 
-        <!-- Chart 4: อำเภอที่อาศัย (Fix 16 แท่ง: 15 อำเภอ + นอกจังหวัดน่าน) -->
+        <!-- Chart 5: อำเภอที่อาศัย (Fix 16 แท่ง: 15 อำเภอ + นอกจังหวัดน่าน) -->
         <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
@@ -177,7 +193,7 @@
           </div>
         </div>
 
-        <!-- Chart 5: สังกัดของโรงเรียน -->
+        <!-- Chart 6: สังกัดของโรงเรียน -->
         <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
@@ -193,7 +209,7 @@
           </div>
         </div>
 
-        <!-- Chart 6: ระดับชั้น -->
+        <!-- Chart 7: ระดับชั้น -->
         <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
@@ -209,7 +225,7 @@
           </div>
         </div>
 
-        <!-- Chart 7: ตำบลที่อาศัย -->
+        <!-- Chart 8: ตำบลที่อาศัย -->
         <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col lg:col-span-2">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
@@ -225,7 +241,7 @@
           </div>
         </div>
 
-        <!-- Chart 8: อุปกรณ์ที่ใช้สมัคร -->
+        <!-- Chart 9: อุปกรณ์ที่ใช้สมัคร -->
         <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col lg:col-span-2">
           <div class="flex items-center justify-between gap-2 mb-4">
             <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
@@ -238,22 +254,6 @@
           </div>
           <div class="chart-container shrink-0" id="container-devices">
             <canvas id="chart-devices"></canvas>
-          </div>
-        </div>
-
-        <!-- Chart 9: แคมป์ที่เคยเข้า -->
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-sm flex flex-col lg:col-span-2">
-          <div class="flex items-center justify-between gap-2 mb-4">
-            <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
-              <span>🏕️</span> แคมป์ที่เคยเข้า
-            </h3>
-            <span class="inline-flex items-baseline gap-1 px-3 py-1 rounded-xl bg-orange-50 text-orange-700 border border-orange-100 shrink-0" id="badge-camps-count">
-              <span class="text-lg sm:text-xl font-extrabold leading-none">--</span>
-              <span class="text-xs sm:text-sm font-semibold">แคมป์</span>
-            </span>
-          </div>
-          <div class="chart-container shrink-0" id="container-camps">
-            <canvas id="chart-camps"></canvas>
           </div>
         </div>
 
@@ -808,6 +808,7 @@
         channels: processedChannels.counts,
         channelDetails: processedChannels.details,
         applyDates: cleanCounts(raw.applyDates),
+        camps: cleanCounts(raw.camps),
         schools: cleanCounts(raw.schools),
         affiliations: cleanCounts(raw.affiliations),
         grades: cleanCounts(raw.grades),
@@ -815,7 +816,6 @@
         districts: processedDistricts.counts,
         activeNanDistrictCount: processedDistricts.activeNanDistrictCount,
         devices: cleanCounts(raw.devices),
-        camps: cleanCounts(raw.camps),
         quotes: validQuotes
       };
     }
@@ -828,13 +828,13 @@
 
       setBadgeCount('badge-channels-count', Object.keys(DATA.channels || {}).length, 'ช่องทาง');
       setBadgeCount('badge-dates-count', Object.keys(DATA.applyDates || {}).length, 'วัน');
+      setBadgeCount('badge-camps-count', Object.keys(DATA.camps || {}).length, 'แคมป์');
       setBadgeCount('badge-schools-count', Object.keys(DATA.schools || {}).length, 'โรงเรียน');
       setBadgeCount('badge-districts-count', DATA.activeNanDistrictCount || 0, '/15 อำเภอ');
       setBadgeCount('badge-affiliations-count', Object.keys(DATA.affiliations || {}).length, 'สังกัด');
       setBadgeCount('badge-grades-count', Object.keys(DATA.grades || {}).length, 'ระดับชั้น');
       setBadgeCount('badge-subdistricts-count', Object.keys(DATA.subdistricts || {}).length, 'ตำบล');
       setBadgeCount('badge-devices-count', Object.keys(DATA.devices || {}).length, 'ประเภท');
-      setBadgeCount('badge-camps-count', Object.keys(DATA.camps || {}).length, 'แคมป์');
     }
 
     // สร้างกราฟแท่งแบบอัตโนมัติพร้อม Layout สม่ำเสมอ ไม่ซ้อนทับ
@@ -1003,6 +1003,14 @@
       });
 
       buildSmartBarChart({
+        key: 'camps',
+        canvasId: 'chart-camps',
+        containerId: 'container-camps',
+        dataObj: DATA.camps,
+        color: '#f97316'
+      });
+
+      buildSmartBarChart({
         key: 'schools',
         canvasId: 'chart-schools',
         containerId: 'container-schools',
@@ -1052,14 +1060,6 @@
         containerId: 'container-devices',
         dataObj: DATA.devices,
         color: ['#10b981', '#3b82f6', '#f43f5e', '#f59e0b', '#8b5cf6']
-      });
-
-      buildSmartBarChart({
-        key: 'camps',
-        canvasId: 'chart-camps',
-        containerId: 'container-camps',
-        dataObj: DATA.camps,
-        color: '#f97316'
       });
     }
 
