@@ -334,7 +334,7 @@
       { key: "nickname",  label: "ชื่อเล่น", width: "min-w-[100px]", type: "text" },
       { key: "grade",     label: "ระดับชั้น", width: "min-w-[130px]", type: "text" },
       { key: "school",    label: "โรงเรียน", width: "min-w-[220px]", type: "text" },
-      { key: "phone",     label: "โทรศัพท์", width: "min-w-[130px]", type: "text" },
+      { key: "camp",      label: "แคมป์ที่เคยเข้า", width: "min-w-[180px]", type: "text" },
       { key: "channel",   label: "รู้ช่องทางการสมัครจาก", width: "min-w-[220px]", type: "text" }
     ];
 
@@ -513,7 +513,7 @@
         nickname: (r.nickname || "").trim(),
         grade: (r.grade || "").trim(),
         school: (r.school || "").trim(),
-        phone: (r.phone || "").trim(),
+        camp: (r.camp || "").trim(),
         channel: (r.channel || "").trim()
       }));
 
@@ -794,9 +794,8 @@
       }
 
       const html = FILTERED_ROWS.map((row, idx) => {
-        const cleanPhoneDigits = (row.phone || "").replace(/[^\d+]/g, "");
-        const phoneHtml = row.phone
-          ? `<a href="tel:${escapeHtml(cleanPhoneDigits)}" class="text-emerald-700 hover:underline font-medium whitespace-nowrap">${escapeHtml(row.phone)}</a>`
+        const campHtml = row.camp
+          ? `<span class="inline-block px-2 py-0.5 rounded-md bg-teal-50 text-teal-800 border border-teal-100 font-medium text-xs">${escapeHtml(row.camp)}</span>`
           : `<span class="text-slate-300">-</span>`;
 
         return `
@@ -811,7 +810,7 @@
             </td>
             <td class="px-2.5 py-2.5 text-slate-700 border-r border-slate-100 whitespace-nowrap">${escapeHtml(row.grade) || '<span class="text-slate-300">-</span>'}</td>
             <td class="px-2.5 py-2.5 text-slate-800 border-r border-slate-100">${escapeHtml(row.school) || '<span class="text-slate-300">-</span>'}</td>
-            <td class="px-2.5 py-2.5 border-r border-slate-100 whitespace-nowrap">${phoneHtml}</td>
+            <td class="px-2.5 py-2.5 border-r border-slate-100">${campHtml}</td>
             <td class="px-2.5 py-2.5 text-slate-600">${escapeHtml(row.channel) || '<span class="text-slate-300">-</span>'}</td>
           </tr>
         `;
@@ -1086,7 +1085,6 @@
 
       const lines = [headers.map(csvEscape).join(",")];
       FILTERED_ROWS.forEach((row, idx) => {
-        const phoneForExcel = row.phone ? `="${row.phone.replace(/"/g, '""')}"` : '""';
         const line = [
           csvEscape(idx + 1),
           csvEscape(row.applyDate),
@@ -1096,7 +1094,7 @@
           csvEscape(row.nickname),
           csvEscape(row.grade),
           csvEscape(row.school),
-          phoneForExcel,
+          csvEscape(row.camp),
           csvEscape(row.channel)
         ].join(",");
         lines.push(line);
