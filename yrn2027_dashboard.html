@@ -540,6 +540,51 @@
       return { counts: sortedCounts, details: sortedDetails };
     }
 
+    // จัดกลุ่มแคมป์ที่เคยเข้า ("ดนตรี ...", "ภาษา ...", "การทำมาหากิน ...") แยกรุ่นปี 25xx ไปแสดงเป็นตารางความถี่ใน Tooltip
+    function processCamps(rawCamps) {
+      const groupedCounts = {};
+      const groupedDetails = {};
+
+      for (const [rawKey, rawVal] of Object.entries(rawCamps || {})) {
+        const key = (rawKey || '').trim();
+        const val = Number(rawVal) || 0;
+        if (!key || key === 'ไม่ต้องระบุ' || val <= 0) continue;
+
+        let groupName = key;
+        let subDetail = null;
+
+        const campMatch = key.match(/^(ดนตรี|ภาษา|การทำมาหากิน)(?:[\s:：\-]+(.*))?$/);
+        if (campMatch) {
+          groupName = campMatch[1];
+          subDetail = (campMatch[2] || '').trim() || '(ไม่ระบุรุ่นปี)';
+        }
+
+        groupedCounts[groupName] = (groupedCounts[groupName] || 0) + val;
+
+        if (subDetail !== null) {
+          if (!groupedDetails[groupName]) groupedDetails[groupName] = {};
+          groupedDetails[groupName][subDetail] = (groupedDetails[groupName][subDetail] || 0) + val;
+        }
+      }
+
+      const sortedCounts = {};
+      Object.keys(groupedCounts)
+        .sort((a, b) => groupedCounts[b] - groupedCounts[a])
+        .forEach(k => { sortedCounts[k] = groupedCounts[k]; });
+
+      const sortedDetails = {};
+      for (const [gKey, detailsObj] of Object.entries(groupedDetails)) {
+        sortedDetails[gKey] = Object.entries(detailsObj)
+          .sort((a, b) => {
+            if (b[1] !== a[1]) return b[1] - a[1];
+            return a[0].localeCompare(b[0], 'th');
+          })
+          .map(([text, count]) => ({ text, count }));
+      }
+
+      return { counts: sortedCounts, details: sortedDetails };
+    }
+
     // จัดเตรียมข้อมูลอำเภอ Fix 16 แท่ง (15 อำเภอเรียงมาก->น้อย + แท่งสุดท้าย "นอกจังหวัดน่าน" รวมค่าว่างด้วย)
     function processDistricts(rawDistricts, totalApplicants) {
       const nanCounts = {};
@@ -621,7 +666,7 @@
       }
     }
 
-    function createExternalTooltipHandler(datasetTotal, groupDetailsMap = null) {
+    function createExternalTooltipHandler(datasetTotal, groupDetailsMap = null, detailColumnTitle = 'รายละเอียดที่ระบุ') {
       return function(context) {
         const { chart, tooltip } = context;
         const tipEl = document.getElementById('custom-chart-tooltip');
@@ -659,7 +704,7 @@
               <table class="w-full text-left border-collapse text-[11px]">
                 <thead>
                   <tr class="text-slate-400">
-                    <th class="pb-1 pr-3 font-medium">รายละเอียดที่ระบุ</th>
+                    <th class="pb-1 pr-3 font-medium">${escapeHtml(detailColumnTitle)}</th>
                     <th class="pb-1 text-right font-medium whitespace-nowrap">จำนวน</th>
                   </tr>
                 </thead>
@@ -833,6 +878,7 @@
 
       const actualTotal = validQuotes.length > 0 ? validQuotes.length : (raw.total || 0);
       const processedChannels = processChannels(raw.channels);
+      const processedCamps = processCamps(raw.camps);
       const processedDistricts = processDistricts(raw.districts, actualTotal);
       const date = raw.updatedDate && raw.updatedDate.trim() !== '' ? raw.updatedDate.trim() : '--';
       const time = cleanTime(raw.updatedTime);
@@ -844,7 +890,8 @@
         channels: processedChannels.counts,
         channelDetails: processedChannels.details,
         applyDates: processApplyDates(raw.applyDates),
-        camps: cleanCounts(raw.camps),
+        camps: processedCamps.counts,
+        campDetails: processedCamps.details,
         schools: cleanCounts(raw.schools),
         affiliations: cleanCounts(raw.affiliations),
         grades: cleanCounts(raw.grades),
@@ -881,6 +928,7 @@
       dataObj,
       color,
       groupDetails = null,
+      detailColumnTitle = 'รายละเอียดที่ระบุ',
       forceHorizontal = false
     }) {
       const canvas = document.getElementById(canvasId);
@@ -986,7 +1034,7 @@
             legend: { display: false },
             tooltip: {
               enabled: false,
-              external: createExternalTooltipHandler(datasetTotal, groupDetails)
+              external: createExternalTooltipHandler(datasetTotal, groupDetails, detailColumnTitle)
             },
             datalabels: {
               color: (ctx) => {
@@ -1027,7 +1075,8 @@
         containerId: 'container-channels',
         dataObj: DATA.channels,
         color: '#3b82f6',
-        groupDetails: DATA.channelDetails
+        groupDetails: DATA.channelDetails,
+        detailColumnTitle: 'รายละเอียดที่ระบุ'
       });
 
       buildSmartBarChart({
@@ -1043,7 +1092,9 @@
         canvasId: 'chart-camps',
         containerId: 'container-camps',
         dataObj: DATA.camps,
-        color: '#f97316'
+        color: '#f97316',
+        groupDetails: DATA.campDetails,
+        detailColumnTitle: 'รุ่นปี'
       });
 
       buildSmartBarChart({
